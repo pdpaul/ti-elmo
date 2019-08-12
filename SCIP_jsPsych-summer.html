@@ -1,0 +1,233 @@
+
+
+<!--cgi-bin directory for scripts that executed (eg: php to save data to server); expts for files that don't need to be executed-->
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>FUNCTIONAL elmo</title>        
+        <script src="./jspsych.js"></script> 
+        <script src="./plugins/jspsych-external-html.js"></script>
+        <script src="./plugins/jspsych-html-keyboard-response.js"></script>
+        <script src="./plugins/jspsych-html-button-response.js"></script>
+        <script src="./plugins/jspsych-image-button-response.js"></script>
+        <script src="./plugins/jspsych-audio-button-response.js"></script>
+        <script src="./plugins/jspsych-fullscreen.js"></script>
+        <script src="./plugins/jspsych-instructions.js"></script>
+        <script src="./plugins/jspsych-video-button-response.js"></script>
+         
+        <script src="./SCIP_jsPsych-summer.css"> </script>  
+        <link href="./css/jspsych.css" rel="stylesheet" type="text/css"/> 
+        
+        <script src="../mmturkey.js"></script>
+        <script src="jquery-1.11.2.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+        <link type="text/css" href ="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" rel="stylesheet"/>
+    </head>
+
+    <body> 
+        <div id="jsPsych-target"></div>
+    </body>
+
+<script> 
+    
+/*var check_input = function(elem) {
+  if (document.getElementById('subjectID').checked) {
+    return true;
+  }
+  else {
+    alert("Please enter valid subject ID");
+    return false;
+  }
+  return false;
+};*/
+
+
+// declare the block.
+/*var welcome = {
+  type:'external-html',
+  url: "welcome-screen.html",
+  cont_btn: "start",
+  check_fn: check_input
+};*/
+     
+var testTrials = ['recap-I',
+                  'recap-II',
+                  'recap-III',
+                  'recap-IV',
+                  'gen-I',
+                  'gen-II',
+                  'critical-A',
+                  'critical-B'];
+
+var timeline = [];
+    
+   // timeline.push(welcome);
+    
+    /* IN PROGRESS: insert external html link to welcome screen ---- "welcome-screen.html" */
+        
+    /* adding subject number and list number to data object  */
+    jsPsych.data.addProperties({
+        subjectID: 'subjectID',  /*needs to be text input from intro html slide */
+        listNum: 'listNum'   /*needs to be text input from intro html slide */
+    });
+        
+    
+    var welcome2 = {
+        type: 'html-keyboard-response',
+        stimulus: 'Welcome to our study. Press any key to continue.'
+    }
+    timeline.push(welcome2);
+
+/* entering fullscreen mode */
+    timeline.push({  
+        type: 'fullscreen',
+        fullscreen_mode: true
+    });
+    
+    var intro = {
+        type: 'instructions',
+        pages: ["<p><center>This is Elmo!" + "<p> Did you know that Elmo LOVES gumballs?" + "<img src='./SCIP_images/Elmo-waves_screenshot.jpeg'>",
+                "<p> In this game, Elmo will show you which jars of gumballs he likes better than others." + 
+                "<p> Your job is to remember what he likes, so that you can help him out later in the game!" + 
+                "<img src='./SCIP_images/Elmo-waves_screenshot.jpeg'>", 
+        "Press 'next' when you're ready to see which jars of gumballs Elmo likes!"],
+        show_clickable_nav: true
+    }
+    timeline.push(intro);
+        
+    var familiarization = {
+        type: 'video-button-response',
+        width: 1200, 
+        start: 200,
+        controls: true,
+        sources: ['SCIP_videos/fam-ALL.mp4'],
+        choices: ['previous','next']
+    }
+    timeline.push(familiarization);
+        
+        
+    /*
+    var familiarization = {
+        type: 'video',
+        width: 800, 
+        start: 0,
+        controls: true,
+        timeline: [
+            sources:['../SCIP_videos/fam-I.mp4',
+                      '../SCIP_videos/fam-II.mp4',
+                      '../SCIP_videos/fam-III.mp4',
+                      '../SCIP_videos/fam-IV.mp4'
+                      ]
+        ]
+    }
+    */
+        
+    var testInstructions = {
+        type: 'instructions',
+        pages: ["<p> Now that Elmo has shown you what he likes, he needs your help!" + "<p> On the next screen, you'll see two jars. You can use your finger to click on the jar that Elmo would like better! Are you ready?"],
+        show_clickable_nav: 'true'
+    }
+    timeline.push(testInstructions);
+
+/* Write a function that plays a sound when image is clicked  */
+    
+/* TODO: add list# and maybe trial# to data  */
+    var testBlock = {
+        type: 'html-button-response',
+        timeline:[
+            {stimulus: "<img src= 'SCIP_images/dummy-test.jpeg'><img src='SCIP_images/SCIP_yellow-jar-1.png'>",
+             data:{
+                trialId: 'trial-1',
+                trial_type: 'TBD',
+                correct_jar: 'Right'}
+             },
+            {stimulus: "<img src = 'SCIP_images/dummy-test-frames/trial-2.jpeg'>",
+             data:{
+                trialId: 'trial-2',
+                trial_type: 'TBD',
+                correct_jar: 'tbd2'}
+            },
+            {stimulus: "<img src = 'SCIP_images/dummy-test-frames/trial-3.jpeg'>",
+             data:{
+                trialId: 'trial-3',
+                trial_type: 'TBD',
+                correct_jar: 'tbd2'}
+            },
+            {stimulus: "<img src = 'SCIP_images/dummy-test-frames/trial-4.jpeg'>",
+             data:{
+                trialId: 'trial-4',
+                trial_type: 'TBD',
+                correct_jar: 'tbd2'}
+            },
+            {stimulus: "<img src = 'SCIP_images/dummy-test-frames/trial-5.jpeg'>",
+             data:{
+                trialId: 'trial-5',
+                trial_type: 'TBD',
+                correct_jar: 'tbd2'}
+            },
+            {stimulus: "<img src = 'SCIP_images/dummy-test-frames/trial-6.jpeg'>",
+             data:{
+                trialId: 'trial-6',
+                trial_type: 'TBD',
+                correct_jar: 'tbd2'}
+            },
+            {stimulus: "<img src = 'SCIP_images/dummy-test-frames/trial-7.jpeg'>",
+             data:{
+                trialId: 'trial-7',
+                trial_type: 'TBD',
+                correct_jar: 'tbd2'}
+            },
+            {stimulus: "<img src = 'SCIP_images/dummy-test-frames/trial-8.jpeg'>",
+             data:{
+                trialId: 'trial-8',
+                trial_type: 'recap',
+                correct_jar: 'tbd2'}
+            }
+        ], 
+        button_html: [
+            '<button class="jspsych-btn"> left jar </button>',
+            '<button class="jspsych-btn"> right jar </button>'
+        ],
+        prompt: "Which jar do you think Elmo will pick?",
+        choices: ['Left', 'Right'],
+        is_html: 'true',
+        timing_response: 1000
+    }
+    timeline.push(testBlock);
+        
+  /* Exiting fullscreen mode   */      
+    timeline.push({
+        type: 'fullscreen',
+        fullscreen_mode: false
+    });
+    
+    var finale = {
+        type: 'html-keyboard-response',
+        stimulus: "Thanks for playing the game with us!",
+    }
+    timeline.push(finale);
+        
+
+    
+
+    jsPsych.init({
+//        display_element: $('#jspsych-target'),
+        timeline: timeline,
+        default_iti: 500,
+//        preload_images: ['SCIP_yellow-jar-1.png', 'SCIP_blue-jar-2.png'],
+        on_finish: function() {jsPsych.data.displayData('csv');}
+    })
+    
+    
+    // select all trials
+var all_data = jsPsych.data.get();
+
+// get csv representation of data and log to console
+console.log(all_data.csv());
+    
+</script>
+
+</html>
