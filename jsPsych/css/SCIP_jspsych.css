@@ -52,7 +52,7 @@
 
 .jspsych-display-element input[type="text"] {
   font-family: 'Open Sans', 'Arial', sans-serif;
-  font-size: 14px;
+  font-size: 18px;
 }
 
 /* borrowing Bootstrap style for btn elements, but combining styles a bit */
@@ -94,6 +94,27 @@
   background-color: #fff;
   border-color: #ccc;
 }
+
+.btn-left-jar-trspnt {
+  background: transparent;
+  position: relative;
+  top:320px;
+  left: 300px;
+  padding: 0px 0px;
+/*  opacity: 0.6;*/
+  margin: 0px;
+  cursor: pointer;
+  line-height: 1.4;
+  white-space: nowrap;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: #333;
+  background-color: transparent;
+  border-color: #ccc;
+}
+
+
 .btn-right-jar {
   position: absolute;
   top:320px;

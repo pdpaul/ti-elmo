@@ -8,21 +8,21 @@
     <head>
         <title>FUNCTIONAL elmo</title>        
         <script src="./jsPsych/jspsych.js"></script> 
-        <script src="./plugins/jspsych-external-html.js"></script>
-        <script src="./plugins/jspsych-html-keyboard-response.js"></script>
-        <script src="./plugins/jspsych-html-button-response.js"></script>
-        <script src="./plugins/jspsych-image-button-response.js"></script>
-        <script src="./plugins/jspsych-survey-html-form.js"></script>
-        <script src="./plugins/jspsych-audio-button-response.js"></script>
-        <script src="./plugins/jspsych-fullscreen.js"></script>
-        <script src="./plugins/jspsych-instructions.js"></script>
-        <script src="./plugins/jspsych-video-button-response.js"></script>
+        <script src="./jsPsych/plugins/jspsych-external-html.js"></script>
+        <script src="./jsPsych/plugins/jspsych-html-keyboard-response.js"></script>
+        <script src="./jsPsych/plugins/jspsych-html-button-response.js"></script>
+        <script src="./jsPsych/plugins/jspsych-image-button-response.js"></script>
+        <script src="./jsPsych/plugins/jspsych-survey-html-form.js"></script>
+        <script src="./jsPsych/plugins/jspsych-audio-button-response.js"></script>
+        <script src="./jsPsych/plugins/jspsych-fullscreen.js"></script>
+        <script src="./jsPsych/plugins/jspsych-instructions.js"></script>
+        <script src="./jsPsych/plugins/jspsych-video-button-response.js"></script>
          
 <!--        <script src="./SCIP_jsPsych-summer.css"> </script>  -->
-        <link href="./css/SCIP_jspsych.css" rel="stylesheet" type="text/css"/> 
+        <link href="./jsPSych/css/SCIP_jspsych.css" rel="stylesheet" type="text/css"/> 
         
         <script src="./jsPsych/mmturkey.js"></script>
-        <script src="/jsPsych/jquery-1.11.2.min.js"></script>
+        <script src="./jsPsych/jquery-1.11.2.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
         <link type="text/css" href ="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" rel="stylesheet"/>
@@ -198,21 +198,21 @@ var timeline = [];
     var testBlock = {
         type: 'html-button-response',
         timeline:[
-            {stimulus: "<img src= 'SCIP_images/dummy-test.jpeg' width=800>",
+            {stimulus: "<img src= './SCIP_test-trials/t1_Y1-B2O.jpeg' width=800>",
              button_html: [
-            '<button class="btn-left-jar"><img src="SCIP_images/SCIP_yellow-jar-1.png"></button>',
-            '<button class="btn-right-jar"><img src="SCIP_images/SCIP_blue-jar-2.png"> </button>'
+            '<button class="btn-left-jar-trspnt"></button>',
+            '<button class="btn-right-jar"><img src="./SCIP_images/blue-jar-1.png"> </button>'
             ],
              data:{
                 trialId: 'trial-1',
-                trial_type: 'TBD',
-                correct_jar: 'Right'}
+                trial_type: 'recap-I',
+                correct_jar: 'right'}
              },
             
-            {stimulus: "<img src = 'SCIP_images/SCIP_test-trials/trial-2.jpeg'>",
+            {stimulus: "<img src = './SCIP_test-trials/t2_G3-Y1.jpeg'  width=800>",
              button_html: [
-            '<button class="btn-left-jar"> <img src="SCIP_images/SCIP_yellow-jar-1.png"> </button>',
-            '<button class="btn-right-jar"> <img src="SCIP_images/SCIP_blue-jar-2.png"> </button>'
+            '<button class="btn-left-jar">left</button>',
+            '<button class="btn-right-jar">right</button>'
             ],
              data:{
                 trialId: 'trial-2',
@@ -220,20 +220,20 @@ var timeline = [];
                 correct_jar: 'tbd2'}
             },
             
-            {stimulus: "<img src='SCIP_images/SCIP_test-trials/trial-3.jpeg'>",
+            {stimulus: "<img src='./SCIP_test-trials/t3_R4O-B2O.jpeg'  width=800>",
              button_html: [
-            '<button class="btn-left-jar"> <img src="SCIP_images/SCIP_red-jar-4.png"> </button>',
-            '<button class="btn-right-jar"> <img src="SCIP_images/SCIP_blue-jar-2.png"> </button>'],
+            '<button class="btn-left-jar">left</button>',
+            '<button class="btn-right-jar">right</button>'],
              data:{
                 trialId: 'trial-3',
                 trial_type: 'TBD',
                 correct_jar: 'tbd2'}
             },
             
-            {stimulus: "<img src = 'SCIP_images/SCIP_test-trials/trial-4.jpeg'>",
+            {stimulus: "<img src = './SCIP_test-trials/t4_P5-R4O.jpeg'  width=800>",
              button_html: [
-            '<button class="btn-left-jar"> <img src="SCIP_images/SCIP_yellow-jar-1.png"> </button>',
-            '<button class="btn-right-jar"> <img src="SCIP_images/SCIP_blue-jar-2.png"> </button>'
+            '<button class="btn-left-jar">left</button>',
+            '<button class="btn-right-jar">right</button>'
             ],
              data:{
                 trialId: 'trial-4',
@@ -241,10 +241,10 @@ var timeline = [];
                 correct_jar: 'tbd2'}
             },
             
-            {stimulus: "<img src = 'SCIP_images/SCIP_test-trials/trial-5.jpeg'>",
+            {stimulus: "<img src = './SCIP_test-trials/t5_P5-G3.jpeg'  width=800>",
              button_html: [
-            '<button class="btn-left-jar"> <img src="SCIP_images/SCIP_yellow-jar-1.png"> </button>',
-            '<button class="btn-right-jar"> <img src="SCIP_images/SCIP_blue-jar-2.png"> </button>'
+            '<button class="btn-left-jar">left</button>',
+            '<button class="btn-right-jar">right</button>'
             ],
              data:{
                 trialId: 'trial-5',
@@ -252,10 +252,10 @@ var timeline = [];
                 correct_jar: 'tbd2'}
             },
             
-            {stimulus: "<img src = 'SCIP_images/SCIP_test-trials/trial-6.jpeg'>",
+            {stimulus: "<img src = './SCIP_test-trials/t6_G3-R4O.jpeg'  width=800>",
              button_html: [
-            '<button class="btn-left-jar"> <img src="SCIP_images/SCIP_yellow-jar-1.png"> </button>',
-            '<button class="btn-right-jar"> <img src="SCIP_images/SCIP_blue-jar-2.png"> </button>'
+            '<button class="btn-left-jar">left</button>',
+            '<button class="btn-right-jar">right</button>'
             ],
              data:{
                 trialId: 'trial-6',
@@ -263,10 +263,10 @@ var timeline = [];
                 correct_jar: 'tbd2'}
             },
             
-            {stimulus: "<img src = 'SCIP_images/SCIP_test-trials/trial-7.jpeg'>",
+            {stimulus: "<img src = './SCIP_test-trials/t7_B2O-G3.jpeg'  width=800>",
              button_html: [
-            '<button class="btn-left-jar"> <img src="SCIP_images/SCIP_yellow-jar-1.png"> </button>',
-            '<button class="btn-right-jar"> <img src="SCIP_images/SCIP_blue-jar-2.png"> </button>'
+            '<button class="btn-left-jar">left</button>',
+            '<button class="btn-right-jar">right</button>'
             ],
              data:{
                 trialId: 'trial-7',
@@ -274,20 +274,25 @@ var timeline = [];
                 correct_jar: 'tbd2'}
             },
             
-            {stimulus: "<img src = 'SCIP_images/SCIP_test-trials/trial-8.jpeg'>",
+            {stimulus: "<img src = './SCIP_test-trials/t8_B2O-R4O.jpeg'  width=800>",
              button_html: [
-            '<button class="btn-left-jar"> <img src="SCIP_images/SCIP_yellow-jar-1.png"> </button>',
-            '<button class="btn-right-jar"> <img src="SCIP_images/SCIP_blue-jar-2.png"> </button>'
+            '<button class="btn-left-jar">left</button>',
+            '<button class="btn-right-jar">right</button>'
             ],
              data:{
                 trialId: 'trial-8',
-                trial_type: 'recap',
-                correct_jar: 'tbd2'}
+                leftJarColor: 'blue',
+                leftJarNum: '2',
+                rightJarColor: 'red',
+                rightJarNum: '4',
+                trial_type: 'critical',
+                correctJar: 'right'
+                }
             }
         ], 
         prompt: "Which jar do you think Elmo will pick?",
         margin_vertical: '-1200px',
-        choices: ['Left', 'Right'],
+        choices: ['left', 'right'],
         is_html: 'true',
         timing_response: 1000
     }
