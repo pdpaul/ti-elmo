@@ -7,33 +7,107 @@
 <html>
     <head>
         <title>FUNCTIONAL elmo</title>        
-        <script src="./jspsych.js"></script> 
+        <script src="./jsPsych/jspsych.js"></script> 
         <script src="./plugins/jspsych-external-html.js"></script>
         <script src="./plugins/jspsych-html-keyboard-response.js"></script>
         <script src="./plugins/jspsych-html-button-response.js"></script>
         <script src="./plugins/jspsych-image-button-response.js"></script>
+        <script src="./plugins/jspsych-survey-html-form.js"></script>
         <script src="./plugins/jspsych-audio-button-response.js"></script>
         <script src="./plugins/jspsych-fullscreen.js"></script>
         <script src="./plugins/jspsych-instructions.js"></script>
         <script src="./plugins/jspsych-video-button-response.js"></script>
          
-        <script src="./SCIP_jsPsych-summer.css"> </script>  
-        <link href="./css/jspsych.css" rel="stylesheet" type="text/css"/> 
+<!--        <script src="./SCIP_jsPsych-summer.css"> </script>  -->
+        <link href="./css/SCIP_jspsych.css" rel="stylesheet" type="text/css"/> 
         
-        <script src="../mmturkey.js"></script>
-        <script src="jquery-1.11.2.min.js"></script>
+        <script src="./jsPsych/mmturkey.js"></script>
+        <script src="/jsPsych/jquery-1.11.2.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
         <link type="text/css" href ="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" rel="stylesheet"/>
     </head>
+    
+   <!-- <style>
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+        }
+        .container img {
+            width: 100%;
+            height: auto;
+        }
 
+        .container .left-btn {
+            position: absolute;
+            top: 50%;
+            left: 25%;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            background-color: #f1f1f1;
+            color: red;
+            font-size: 16px;
+            padding: 16px 30px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: center;
+        }
+         .container .right-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            background-color: #f1f1f1;
+            color: black;
+            font-size: 16px;
+            padding: 16px 30px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: center;
+        }
+</style>
+-->
     <body> 
-        <div id="jsPsych-target"></div>
     </body>
 
 <script> 
+
+var timeline = [];
     
-/*var check_input = function(elem) {
+    /* IN PROGRESS: insert external html link to welcome screen ---- "welcome-screen.html" */
+        
+/*var welcomeExternal = {
+  type:'external-html',
+  url: "welcome-screen.html",
+//  check_fn: check_input,
+  cont_btn: "start"
+};
+    timeline.push(welcomeExternal);*/
+     
+//var testTrials = ['recap-I',
+//                  'recap-II',
+//                  'recap-III',
+//                  'recap-IV',
+//                  'gen-I',
+//                  'gen-II',
+//                  'critical-A',
+//                  'critical-B'];
+
+
+/*    var welcomeScreen = {
+        type: 'survey-html-form',
+        preamble: "Please enter the following: <img src= './SCIP_images/stanford.png'>",
+        button_label: "Begin Game",
+        dataAsArray: 'true',
+        html: "<p>Subject ID <input id="subjectID" type="text"/><br><br>List Number <br><br>"
+    }
+    timeline.push(welcomeScreen);*/
+    
+    /*var check_input = function(elem) {
   if (document.getElementById('subjectID').checked) {
     return true;
   }
@@ -43,31 +117,12 @@
   }
   return false;
 };*/
-
-
-// declare the block.
-/*var welcome = {
-  type:'external-html',
-  url: "welcome-screen.html",
-  cont_btn: "start",
-  check_fn: check_input
-};*/
-     
-var testTrials = ['recap-I',
-                  'recap-II',
-                  'recap-III',
-                  'recap-IV',
-                  'gen-I',
-                  'gen-II',
-                  'critical-A',
-                  'critical-B'];
-
-var timeline = [];
-    
    // timeline.push(welcome);
     
-    /* IN PROGRESS: insert external html link to welcome screen ---- "welcome-screen.html" */
-        
+
+    
+    
+    
     /* adding subject number and list number to data object  */
     jsPsych.data.addProperties({
         subjectID: 'subjectID',  /*needs to be text input from intro html slide */
@@ -77,7 +132,12 @@ var timeline = [];
     
     var welcome2 = {
         type: 'html-keyboard-response',
-        stimulus: 'Welcome to our study. Press any key to continue.'
+        stimulus: "Welcome to our study. Press any key to continue."
+        /*+"<p class='block-text'><center> Subject ID: <br>
+      <input type='text' id='subjectID' name='subjectID' size='30'> 
+    </center></p>" 
+        + "<p class="block-text"><center>Age: <br><input type="text" id="subjectAge" name="subjectAge" size="30"> </center></p>"
+        +"<p class="block-text"><center>Today's date: <br><input type="text" id="todaysDate" name="todaysDate" size="30"> </center></p>"'*/
     }
     timeline.push(welcome2);
 
@@ -89,10 +149,10 @@ var timeline = [];
     
     var intro = {
         type: 'instructions',
-        pages: ["<p><center>This is Elmo!" + "<p> Did you know that Elmo LOVES gumballs?" + "<img src='./SCIP_images/Elmo-waves_screenshot.jpeg'>",
+        pages: ["<p><center>This is Elmo!" + "<p> Did you know that Elmo LOVES gumballs?" + "<p><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' width=800>",
                 "<p> In this game, Elmo will show you which jars of gumballs he likes better than others." + 
                 "<p> Your job is to remember what he likes, so that you can help him out later in the game!" + 
-                "<img src='./SCIP_images/Elmo-waves_screenshot.jpeg'>", 
+                "<p><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' width=800>", 
         "Press 'next' when you're ready to see which jars of gumballs Elmo likes!"],
         show_clickable_nav: true
     }
@@ -138,60 +198,95 @@ var timeline = [];
     var testBlock = {
         type: 'html-button-response',
         timeline:[
-            {stimulus: "<img src= 'SCIP_images/dummy-test.jpeg'><img src='SCIP_images/SCIP_yellow-jar-1.png'>",
+            {stimulus: "<img src= 'SCIP_images/dummy-test.jpeg' width=800>",
+             button_html: [
+            '<button class="btn-left-jar"><img src="SCIP_images/SCIP_yellow-jar-1.png"></button>',
+            '<button class="btn-right-jar"><img src="SCIP_images/SCIP_blue-jar-2.png"> </button>'
+            ],
              data:{
                 trialId: 'trial-1',
                 trial_type: 'TBD',
                 correct_jar: 'Right'}
              },
-            {stimulus: "<img src = 'SCIP_images/dummy-test-frames/trial-2.jpeg'>",
+            
+            {stimulus: "<img src = 'SCIP_images/SCIP_test-trials/trial-2.jpeg'>",
+             button_html: [
+            '<button class="btn-left-jar"> <img src="SCIP_images/SCIP_yellow-jar-1.png"> </button>',
+            '<button class="btn-right-jar"> <img src="SCIP_images/SCIP_blue-jar-2.png"> </button>'
+            ],
              data:{
                 trialId: 'trial-2',
                 trial_type: 'TBD',
                 correct_jar: 'tbd2'}
             },
-            {stimulus: "<img src = 'SCIP_images/dummy-test-frames/trial-3.jpeg'>",
+            
+            {stimulus: "<img src='SCIP_images/SCIP_test-trials/trial-3.jpeg'>",
+             button_html: [
+            '<button class="btn-left-jar"> <img src="SCIP_images/SCIP_red-jar-4.png"> </button>',
+            '<button class="btn-right-jar"> <img src="SCIP_images/SCIP_blue-jar-2.png"> </button>'],
              data:{
                 trialId: 'trial-3',
                 trial_type: 'TBD',
                 correct_jar: 'tbd2'}
             },
-            {stimulus: "<img src = 'SCIP_images/dummy-test-frames/trial-4.jpeg'>",
+            
+            {stimulus: "<img src = 'SCIP_images/SCIP_test-trials/trial-4.jpeg'>",
+             button_html: [
+            '<button class="btn-left-jar"> <img src="SCIP_images/SCIP_yellow-jar-1.png"> </button>',
+            '<button class="btn-right-jar"> <img src="SCIP_images/SCIP_blue-jar-2.png"> </button>'
+            ],
              data:{
                 trialId: 'trial-4',
                 trial_type: 'TBD',
                 correct_jar: 'tbd2'}
             },
-            {stimulus: "<img src = 'SCIP_images/dummy-test-frames/trial-5.jpeg'>",
+            
+            {stimulus: "<img src = 'SCIP_images/SCIP_test-trials/trial-5.jpeg'>",
+             button_html: [
+            '<button class="btn-left-jar"> <img src="SCIP_images/SCIP_yellow-jar-1.png"> </button>',
+            '<button class="btn-right-jar"> <img src="SCIP_images/SCIP_blue-jar-2.png"> </button>'
+            ],
              data:{
                 trialId: 'trial-5',
                 trial_type: 'TBD',
                 correct_jar: 'tbd2'}
             },
-            {stimulus: "<img src = 'SCIP_images/dummy-test-frames/trial-6.jpeg'>",
+            
+            {stimulus: "<img src = 'SCIP_images/SCIP_test-trials/trial-6.jpeg'>",
+             button_html: [
+            '<button class="btn-left-jar"> <img src="SCIP_images/SCIP_yellow-jar-1.png"> </button>',
+            '<button class="btn-right-jar"> <img src="SCIP_images/SCIP_blue-jar-2.png"> </button>'
+            ],
              data:{
                 trialId: 'trial-6',
                 trial_type: 'TBD',
                 correct_jar: 'tbd2'}
             },
-            {stimulus: "<img src = 'SCIP_images/dummy-test-frames/trial-7.jpeg'>",
+            
+            {stimulus: "<img src = 'SCIP_images/SCIP_test-trials/trial-7.jpeg'>",
+             button_html: [
+            '<button class="btn-left-jar"> <img src="SCIP_images/SCIP_yellow-jar-1.png"> </button>',
+            '<button class="btn-right-jar"> <img src="SCIP_images/SCIP_blue-jar-2.png"> </button>'
+            ],
              data:{
                 trialId: 'trial-7',
                 trial_type: 'TBD',
                 correct_jar: 'tbd2'}
             },
-            {stimulus: "<img src = 'SCIP_images/dummy-test-frames/trial-8.jpeg'>",
+            
+            {stimulus: "<img src = 'SCIP_images/SCIP_test-trials/trial-8.jpeg'>",
+             button_html: [
+            '<button class="btn-left-jar"> <img src="SCIP_images/SCIP_yellow-jar-1.png"> </button>',
+            '<button class="btn-right-jar"> <img src="SCIP_images/SCIP_blue-jar-2.png"> </button>'
+            ],
              data:{
                 trialId: 'trial-8',
                 trial_type: 'recap',
                 correct_jar: 'tbd2'}
             }
         ], 
-        button_html: [
-            '<button class="jspsych-btn"> left jar </button>',
-            '<button class="jspsych-btn"> right jar </button>'
-        ],
         prompt: "Which jar do you think Elmo will pick?",
+        margin_vertical: '-1200px',
         choices: ['Left', 'Right'],
         is_html: 'true',
         timing_response: 1000

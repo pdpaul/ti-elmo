@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Elmo, working</title>
+        <script src="jspsych-6.0.5/jspsych.js"></script> 
+        <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
+        <script src="jspsych-6.0.5/plugins/jspsych-html-button-response.js"></script>
+        <script src="jspsych-6.0.5/plugins/jspsych-video.js"></script>
+        <link href="jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+    </head>
+    <body></body>
+    <script>
+    
+    var timeline = [];
+        
+    var results = [];
+        
+    var welcome = {
+        type: 'html-keyboard-response',
+        stimulus: 'Press any key to continue.'
+    }
+    timeline.push(welcome);
+    
+    var intro = {
+        type: 'html-button-response',
+        stimulus: "<img src='img/elmo2.png'>" + "<p> Here's Elmo! Click the button to watch him pick a jar of gumballs.",
+        choices: ['continue'],
+    }
+    timeline.push(intro);
+
+    var familiarization = {
+        type: 'video',
+        width: 800, 
+        start: 0,
+        controls: true,
+        sources: ['video/allFam.mp4']
+    }
+    timeline.push(familiarization);
+    
+    var proceed = {
+        type: 'html-button-response',
+        stimulus: "<p> Next, Elmo will need your help picking his favorite jars.",
+        choices: ['Continue']
+    }
+    timeline.push(proceed);
+        
+    var trial1 = {
+        type: 'html-button-response',
+        stimulus: "<img src = 'img/trial 1.png'>" + "<p> Which jar do you think Elmo will pick?",
+        choices: ['Left', 'Right']
+        
+    }
+    timeline.push(trial1);
+        
+    var trial2 = {
+        type: 'html-button-response',
+        stimulus: "<img src = 'img/trial 2.png'>" + "<p> Which jar do you think Elmo will pick?",
+        choices: ['Left', 'Right']
+    }
+    timeline.push(trial2);
+        
+    var trial3 = {
+        type: 'html-button-response',
+        stimulus: "<img src = 'img/trial 3.png'>" + "<p> Which jar do you think Elmo will pick?",
+        choices: ['Left', 'Right']
+    }
+    timeline.push(trial3);
+    
+    var trial4 = {
+        type: 'html-button-response',
+        stimulus: "<img src = 'img/trial 4.png'>" + "<p> Which jar do you think Elmo will pick?",
+        choices: ['Left', 'Right']
+    }
+    timeline.push(trial4);
+        
+    var trial5 = {
+        type: 'html-button-response',
+        stimulus: "<img src = 'img/trial 5.png'>" + "<p> Which jar do you think Elmo will pick?",
+        choices: ['Left', 'Right']
+    }
+    timeline.push(trial5);
+        
+    var trial6 = {
+        type: 'html-button-response',
+        stimulus: "<img src = 'img/trial 6.png'>" + "<p> Which jar do you think Elmo will pick?",
+        choices: ['Left', 'Right']
+    }
+    timeline.push(trial6);
+        
+    var trial7 = {
+        type: 'html-button-response',
+        stimulus: "<img src = 'img/trial 7.png'>" + "<p> Which jar do you think Elmo will pick?",
+        choices: ['Left', 'Right']
+    }
+    timeline.push(trial7);
+    
+    var trial8 = {
+        type: 'html-button-response',
+        stimulus: "<img src = 'img/trial 8.png'>" + "<p> Which jar do you think Elmo will pick?",
+        choices: ['Left', 'Right']
+    }
+    timeline.push(trial8);
+
+    var finale = {
+        type: 'html-keyboard-response',
+        stimulus: "<p> Thanks for playing the game!",
+    }
+    timeline.push(finale);
+        
+    var results = jsPsych.data.get().select('button_pressed');
+        
+    jsPsych.init({
+        timeline: timeline
+    })
+
+    </script>
+</html>
