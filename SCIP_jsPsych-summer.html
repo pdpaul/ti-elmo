@@ -150,10 +150,10 @@ var timeline = [];
     
     var intro = {
         type: 'instructions',
-        pages: ["<p><center>This is Elmo!" + "<p> Elmo LOVES gumballs!" + "<p><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' width=800>",
+        pages: ["<p><center>This is Elmo!" + "<p> Elmo LOVES gumballs!" + "<p><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' height=500>",
                 "<p> In this game, Elmo will show you which jars of gumballs he likes better than others." + 
-                "<p> Your job is to remember what he likes, so that you can help him out later in the game!" + 
-                "<p><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' width=800>", 
+                "<p> Your job is to <em>remember</em> what he likes, so that you can help him out later in the game!" + 
+                "<p><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' height=500>", 
         "Press <b>'Next'</b> when you're ready to see which jars of gumballs Elmo likes!<br><br><br>"],
         show_clickable_nav: true
     }
@@ -162,10 +162,10 @@ var timeline = [];
     var familiarization = {
         type: 'video-button-response',
         width: 1200, 
-        start: 200,
-        controls: true,
+        start: 0,
+        controls: false,
         sources: ['SCIP_videos/fam-ALL.mp4'],
-        choices: ['previous','next']
+        choices: ['continue']
     }
     timeline.push(familiarization);
         
@@ -188,7 +188,7 @@ var timeline = [];
         
     var testInstructions = {
         type: 'instructions',
-        pages: ["<p> Now that Elmo has shown you what he likes, he needs your help!<br>" + "<p> On the next screen, you will see two jars of gumballs. <p> <br> Use the trackpad (laptop) or your finger (tablet) to click on the jar that Elmo would like better!<br><br><br> <b>Are you ready?</b>"],
+        pages: ["<p> Now that Elmo has shown you what he likes, he needs your help!<br>","<p> On the next screen, you will see two jars of gumballs. <p> <br> Use the trackpad (laptop) or your finger (tablet) to click on the jar that Elmo would like better!<br><br><br> <b>Are you ready?</b>"],
         show_clickable_nav: 'true'
     }
     timeline.push(testInstructions);
@@ -199,7 +199,7 @@ var timeline = [];
     var testBlock = {
         type: 'html-button-response',
         timeline:[
-            {stimulus: "<div class="container"><img src= './SCIP_test-trials/t1_Y1-B2O.jpeg' width=800></div>",
+            {stimulus: '<img src= "./SCIP_test-trials/t1_Y1-B2O.jpeg" width=800>',
              button_html: [
             '<button class="btn-left-jar-trspnt"></button>',
             '<button class="btn-right-jar-trspnt"></button>'
@@ -207,7 +207,9 @@ var timeline = [];
              data:{
                 trialId: 'trial-1',
                 trial_type: 'recap-I',
-                correct_jar: 'right'}
+                correct_jar: 'right',
+                leftJarInfo: ['yellow','1'],
+                rightJarInfo: ['blue','2']}
              },
             
             {stimulus: "<img src = './SCIP_test-trials/t2_G3-Y1.jpeg'  width=800>",
@@ -218,7 +220,9 @@ var timeline = [];
              data:{
                 trialId: 'trial-2',
                 trial_type: 'gen-I',
-                correct_jar: 'left'}
+                correct_jar: 'left',
+                leftJarInfo: ['green','3'],
+                rightJarInfo: ['yellow','1']}
             },
             {stimulus: "<img src = './SCIP_test-trials/t3_B2O-R4O.jpeg'  width=800>",
              button_html: [
@@ -227,10 +231,10 @@ var timeline = [];
             ],
              data:{
                 trialId: 'trial-3',
-                leftJarInfo: ['blue','2'],
-                rightJarInfo: ['red','4'],
                 trial_type: 'critical',
-                correctJar: 'right'
+                correctJar: 'right',
+                leftJarInfo: ['blue','2'],
+                rightJarInfo: ['red','4']
                 }
             },
             
@@ -254,7 +258,9 @@ var timeline = [];
              data:{
                 trialId: 'trial-5',
                 trial_type: 'gen-II',
-                correct_jar: 'left'}
+                correct_jar: 'left',
+                leftJarInfo: ['purple','5'],
+                rightJarInfo: ['green','3']}
             },
             
             {stimulus: "<img src = './SCIP_test-trials/t6_G3-R4O.jpeg'  width=800>",
@@ -265,7 +271,9 @@ var timeline = [];
              data:{
                 trialId: 'trial-6',
                 trial_type: 'recap-III',
-                correct_jar: 'right'}
+                correct_jar: 'right',
+                leftJarInfo: ['green','3'],
+                rightJarInfo: ['red','4']}
             },
             
             {stimulus: "<img src = './SCIP_test-trials/t7_B2O-G3.jpeg'  width=800>",
@@ -276,7 +284,9 @@ var timeline = [];
              data:{
                 trialId: 'trial-7',
                 trial_type: 'recap-II',
-                correct_jar: 'right'}
+                correct_jar: 'right',
+                leftJarInfo: ['blue','2'],
+                rightJarInfo: ['green','3']}
             },
             
              {stimulus: "<img src='./SCIP_test-trials/t8_R4O-B2O.jpeg'  width=800>",
@@ -286,7 +296,9 @@ var timeline = [];
              data:{
                 trialId: 'trial-8',
                 trial_type: 'critical',
-                correct_jar: 'left'}
+                correct_jar: 'left',
+                leftJarInfo: ['red','4'],
+                rightJarInfo: ['blue','2']}
             }
         ], 
         prompt: "Which jar do you think Elmo will pick?",
