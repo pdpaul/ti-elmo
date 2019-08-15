@@ -118,7 +118,7 @@ var timeline = [];
     
     var welcome2 = {
         type: 'html-keyboard-response',
-        stimulus: "Welcome to our game. Press any key to continue."
+        stimulus: "<center><p>Welcome to our game. Press any key to continue."
         /*+"<p class='block-text'><center> Subject ID: <br>
       <input type='text' id='subjectID' name='subjectID' size='30'> 
     </center></p>" 
@@ -138,8 +138,8 @@ var timeline = [];
         type: 'instructions',
         pages: ["<p><center>This is Elmo!" + "<p> Elmo LOVES gumballs!" + "<p><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' height=500>",
                 "<p><center> In this game, Elmo will show you which jars of gumballs he likes better than others." + 
-                "<p> Your job is to <em>remember</em> what he likes, so that you can help him out later in the game!" + 
-                "<p><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' height=500>", 
+                "<p><center>Your job is to <em>remember</em> what he likes, so that you can help him out later in the game!" + 
+                "<p><center><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' height=500>", 
         "<center>Press <b>'Next'</b> when you're ready to see which jars of gumballs Elmo likes!<br><br><br>"],
         show_clickable_nav: true
     }
@@ -148,7 +148,7 @@ var timeline = [];
     var familiarization = {
         type: 'video-button-response',
         width: 1200, 
-        start: 0,
+        start: 200,
         controls: false,
         sources: ['SCIP_videos/fam-ALL.mp4'],
         choices: ['continue']
@@ -198,7 +198,7 @@ var timeline = [];
                 rightJarInfo: ['blue','2']}
              },
             
-            {stimulus: "<img src = './SCIP_test-trials/t2_G3-Y1.jpeg'  width=800>",
+            {stimulus: "<center><img src = './SCIP_test-trials/t2_G3-Y1.jpeg'  width=800>",
              button_html: [
             '<button class="btn-left-jar-trspnt"></button>',
             '<button class="btn-right-jar-trspnt"></button>'
@@ -210,7 +210,7 @@ var timeline = [];
                 leftJarInfo: ['green','3'],
                 rightJarInfo: ['yellow','1']}
             },
-            {stimulus: "<img src = './SCIP_test-trials/t3_B2O-R4O.jpeg'  width=800>",
+            {stimulus: "<center><img src = './SCIP_test-trials/t3_B2O-R4O.jpeg'  width=800>",
              button_html: [
             '<button class="btn-left-jar-trspnt"></button>',
             '<button class="btn-right-jar-trspnt"></button>'
@@ -224,7 +224,7 @@ var timeline = [];
                 }
             },
             
-            {stimulus: "<img src = './SCIP_test-trials/t4_P5-R4O.jpeg'  width=800>",
+            {stimulus: "<center><img src = './SCIP_test-trials/t4_P5-R4O.jpeg'  width=800>",
              button_html: [
             '<button class="btn-left-jar-trspnt"></button>',
             '<button class="btn-right-jar-trspnt"></button>'
@@ -236,7 +236,7 @@ var timeline = [];
              }
             },
             
-            {stimulus: "<img src = './SCIP_test-trials/t5_P5-G3.jpeg'  width=800>",
+            {stimulus: "<center><img src = './SCIP_test-trials/t5_P5-G3.jpeg'  width=800>",
              button_html: [
             '<button class="btn-left-jar-trspnt"></button>',
             '<button class="btn-right-jar-trspnt"></button>'
@@ -249,7 +249,7 @@ var timeline = [];
                 rightJarInfo: ['green','3']}
             },
             
-            {stimulus: "<img src = './SCIP_test-trials/t6_G3-R4O.jpeg'  width=800>",
+            {stimulus: "<center><img src = './SCIP_test-trials/t6_G3-R4O.jpeg'  width=800>",
              button_html: [
             '<button class="btn-left-jar-trspnt"></button>',
             '<button class="btn-right-jar-trspnt"></button>'
@@ -262,7 +262,7 @@ var timeline = [];
                 rightJarInfo: ['red','4']}
             },
             
-            {stimulus: "<img src = './SCIP_test-trials/t7_B2O-G3.jpeg'  width=800>",
+            {stimulus: "<center><img src = './SCIP_test-trials/t7_B2O-G3.jpeg'  width=800>",
              button_html: [
             '<button class="btn-left-jar-trspnt"></button>',
             '<button class="btn-right-jar-trspnt"></button>'
@@ -275,7 +275,7 @@ var timeline = [];
                 rightJarInfo: ['green','3']}
             },
             
-             {stimulus: "<img src='./SCIP_test-trials/t8_R4O-B2O.jpeg'  width=800>",
+             {stimulus: "<center><img src='./SCIP_test-trials/t8_R4O-B2O.jpeg'  width=800>",
              button_html: [
             '<button class="btn-left-jar-trspnt"></button>',
             '<button class="btn-right-jar-trspnt"></button>'],
