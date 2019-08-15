@@ -19,6 +19,10 @@
    outline: none;
  }
 
+.container {
+  position: relative;
+}
+
  .jspsych-content-wrapper {
    display: flex;
    margin: auto;
@@ -79,7 +83,7 @@
 .btn-left-jar {
   position: absolute;
   top:320px;
-  left: 300px;
+  left: 350px;
   padding: 0px 0px;
 /*  opacity: 0.6;*/
   margin: 0px;
@@ -97,28 +101,45 @@
 
 .btn-left-jar-trspnt {
   background: transparent;
-  position: relative;
+  position: absolute;
   top:320px;
-  left: 300px;
-  padding: 0px 0px;
-/*  opacity: 0.6;*/
+  left: 350px;
+  padding: 100px 70px;
+  opacity: 0.05;
   margin: 0px;
   cursor: pointer;
   line-height: 1.4;
   white-space: nowrap;
   background-image: none;
-  border: 1px solid transparent;
+  border: 1px green;
+  border-radius: 4px;
+  color: #333;
+  background-color: transparent;
+  border-color: #ccc;
+}
+.btn-right-jar-trspnt {
+  background: transparent;
+  position: absolute;
+  top:320px;
+  right: 350px;
+  padding: 100px 70px;
+  opacity: 0.05;
+  margin: 0px;
+  cursor: pointer;
+  line-height: 1.4;
+  white-space: nowrap;
+  background-image: none;
+  border: 1px green;
   border-radius: 4px;
   color: #333;
   background-color: transparent;
   border-color: #ccc;
 }
 
-
 .btn-right-jar {
   position: absolute;
   top:320px;
-  right: 300px;
+  right: 350px;
   padding: 0px 0px;
   margin: 0px;
   font-family: 'Open Sans', 'Arial', sans-serif;
@@ -133,10 +154,32 @@
   border-color: #ccc;
 }
 
+
+.btn-left-jar-trspnt:hover {
+  background-color: #ddd;
+  border-color: #aaa;
+}
+
+.btn-left-jar:hover {
+  background-color: #ddd;
+  border-color: #aaa;
+}
+
+.btn-right-jar-trspnt:hover {
+  background-color: #ddd;
+  border-color: #aaa;
+}
+
+.btn-right-jar:hover {
+  background-color: #ddd;
+  border-color: #aaa;
+}
+
 .jspsych-btn:hover {
   background-color: #ddd;
   border-color: #aaa;
 }
+
 
 .jspsych-btn:disabled {
   background-color: #eee;
