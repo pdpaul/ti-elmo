@@ -44,7 +44,7 @@ jsPsych.plugins['survey-text'] = (function() {
           columns: {
             type: jsPsych.plugins.parameterType.INT,
             pretty_name: 'Columns',
-            default: 40,
+            default: 8,
             description: 'The number of columns for the response text box.'
           },
           required: {

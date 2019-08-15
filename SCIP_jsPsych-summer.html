@@ -1,4 +1,4 @@
-
+<!--terminal aliases: afs; goexp; git pull -->
 
 <!--cgi-bin directory for scripts that executed (eg: php to save data to server); expts for files that don't need to be executed-->
 
@@ -11,6 +11,7 @@
         <script src="./jsPsych/plugins/jspsych-external-html.js"></script>
         <script src="./jsPsych/plugins/jspsych-html-keyboard-response.js"></script>
         <script src="./jsPsych/plugins/jspsych-html-button-response.js"></script>
+        <script src="./jsPsych/plugins/jspsych-survey-text.js"></script>
         <script src="./jsPsych/plugins/jspsych-image-button-response.js"></script>
         <script src="./jsPsych/plugins/jspsych-survey-html-form.js"></script>
         <script src="./jsPsych/plugins/jspsych-audio-button-response.js"></script>
@@ -71,8 +72,7 @@
         }
 </style>
 -->
-    <body> 
-    </body>
+    <body> <p id="demo"></p> </body>
 
 <script> 
 
@@ -109,23 +109,37 @@ var timeline = [];
 };*/
    // timeline.push(welcome);
     
-    /* adding subject number and list number to data object  */
+    var subjectID = '';
+    var subjectAge = '';
+    var listNum = '';
+    var d = new Date();
+    //var testDate = document.getElementById("demo").innerHTML = d.getDate();*/
+    
+    /* adding subject#,age,list#,test date to data object  */
     jsPsych.data.addProperties({
-        subjectID: 'subjectID',  /*needs to be text input from intro html slide */
-        listNum: 'listNum'   /*needs to be text input from intro html slide */
+        subjectID: subjectID,  /*text input from intro slide */
+        subjectAge: subjectAge,/*text input from intro slide */
+        listNum: listNum, /*text input from intro slide */
+        testDate: d/*text input from intro slide */
     });
         
-    
     var welcome2 = {
         type: 'html-keyboard-response',
-        stimulus: "<center><p>Welcome to our game. Press any key to continue."
-        /*+"<p class='block-text'><center> Subject ID: <br>
-      <input type='text' id='subjectID' name='subjectID' size='30'> 
-    </center></p>" 
-        + "<p class="block-text"><center>Age: <br><input type="text" id="subjectAge" name="subjectAge" size="30"> </center></p>"
-        +"<p class="block-text"><center>Today's date: <br><input type="text" id="todaysDate" name="todaysDate" size="30"> </center></p>"'*/
-    }
+        stimulus: '<center><p>Welcome to our game. Press any key to continue.</center>'
+    };
     timeline.push(welcome2);
+    
+    var inputScreen = {
+        type: 'survey-text',
+        preamble: "Please enter the following information before proceeding:",
+        questions: [
+            {prompt: "Subject ID:", name:'subjectID'},
+            {prompt: "Age Group", name: 'age'},
+            {prompt: "List Number:", name: 'listNum'},
+            {prompt: "Today's Date", name: 'testDate'}
+        ]
+    };
+    timeline.push(inputScreen);
 
 /* entering fullscreen mode */
     timeline.push({  
@@ -179,6 +193,8 @@ var timeline = [];
         show_clickable_nav: 'true'
     }
     timeline.push(testInstructions);
+    
+    // timeline.push(fixation);
 
 /* Write a function that plays a sound when image is clicked  */
     
@@ -186,7 +202,8 @@ var timeline = [];
     var testBlock = {
         type: 'html-button-response',
         timeline:[
-            {stimulus: '<center><img src= "./SCIP_test-trials/t1_Y1-B2O.jpeg" width=800>',
+            {          /* recap-I */
+            stimulus: '<center><img src= "./SCIP_test-trials/t1_Y1-B2O.jpeg" width=800>',
              button_html: [
             '<button class="btn-left-jar-trspnt"></button>',
             '<button class="btn-right-jar-trspnt"></button>'
@@ -198,7 +215,13 @@ var timeline = [];
                 leftJarInfo: ['yellow','1'],
                 rightJarInfo: ['blue','2']}
              },
-            
+                    /* fixation trial */
+            {stimulus:'<p style="font-size: 48px; font-color: blue;">+</p>',
+             choices: '',
+             prompt: '',
+             trial_duration: 500
+            },
+                    /*generalization-I*/
             {stimulus: "<center><img src = './SCIP_test-trials/t2_G3-Y1.jpeg'  width=800>",
              button_html: [
             '<button class="btn-left-jar-trspnt"></button>',
@@ -211,6 +234,13 @@ var timeline = [];
                 leftJarInfo: ['green','3'],
                 rightJarInfo: ['yellow','1']}
             },
+                        /* fixation trial */
+            {stimulus:'<p style="font-size: 48px; font-color: blue;">+</p>',
+             choices: '',
+             prompt: '',
+             trial_duration: 500
+            },
+                        /* critical trial (B-R) */
             {stimulus: "<center><img src = './SCIP_test-trials/t3_B2O-R4O.jpeg'  width=800>",
              button_html: [
             '<button class="btn-left-jar-trspnt"></button>',
@@ -224,7 +254,13 @@ var timeline = [];
                 rightJarInfo: ['red','4']
                 }
             },
-            
+                        /* fixation trial */
+            {stimulus:'<p style="font-size: 48px; font-color: blue;">+</p>',
+             choices: '',
+             prompt: '',
+             trial_duration: 500
+            },
+                        /* recap trial IV */
             {stimulus: "<center><img src = './SCIP_test-trials/t4_P5-R4O.jpeg'  width=800>",
              button_html: [
             '<button class="btn-left-jar-trspnt"></button>',
@@ -233,10 +269,18 @@ var timeline = [];
              data:{
                 trialId: 'trial-4',
                 trial_type: 'recap-IV',
-                correct_jar: 'left'
+                correct_jar: 'left',
+                leftJarInfo: ['purple','5'],
+                rightJarInfo: ['red','4']
              }
             },
-            
+                         /* fixation trial */
+            {stimulus:'<p style="font-size: 48px; font-color: blue;">+</p>',
+             choices: '',
+             prompt: '',
+             trial_duration: 500
+            },
+                        /* generalization trial II */
             {stimulus: "<center><img src = './SCIP_test-trials/t5_P5-G3.jpeg'  width=800>",
              button_html: [
             '<button class="btn-left-jar-trspnt"></button>',
@@ -249,7 +293,13 @@ var timeline = [];
                 leftJarInfo: ['purple','5'],
                 rightJarInfo: ['green','3']}
             },
-            
+                         /* fixation trial */
+            {stimulus:'<p style="font-size: 48px; font-color: blue;">+</p>',
+             choices: '',
+             prompt: '',
+             trial_duration: 500
+            },
+                        /* recap trial III */
             {stimulus: "<center><img src = './SCIP_test-trials/t6_G3-R4O.jpeg'  width=800>",
              button_html: [
             '<button class="btn-left-jar-trspnt"></button>',
@@ -262,7 +312,13 @@ var timeline = [];
                 leftJarInfo: ['green','3'],
                 rightJarInfo: ['red','4']}
             },
-            
+                         /* fixation trial */
+            {stimulus:'<p style="font-size: 48px; font-color: blue;">+</p>',
+             choices: '',
+             prompt: '',
+             trial_duration: 500
+            },
+                        /* recap trial II */
             {stimulus: "<center><img src = './SCIP_test-trials/t7_B2O-G3.jpeg'  width=800>",
              button_html: [
             '<button class="btn-left-jar-trspnt"></button>',
@@ -275,7 +331,13 @@ var timeline = [];
                 leftJarInfo: ['blue','2'],
                 rightJarInfo: ['green','3']}
             },
-            
+                         /* fixation trial */
+            {stimulus:'<p style="font-size: 48px; font-color: blue;">+</p>',
+             choices: '',
+             prompt: '',
+             trial_duration: 500
+            },
+                        /* critical trial (R-B) */
              {stimulus: "<center><img src='./SCIP_test-trials/t8_R4O-B2O.jpeg'  width=800>",
              button_html: [
             '<button class="btn-left-jar-trspnt"></button>',
@@ -291,8 +353,7 @@ var timeline = [];
         prompt: "<center>Which jar do you think Elmo will pick?",
         margin_vertical: '-1200px',
         choices: ['left', 'right'],
-        is_html: 'true',
-        timing_response: 1000
+        is_html: 'true'
     }
     timeline.push(testBlock);
         
@@ -308,23 +369,30 @@ var timeline = [];
     }
     timeline.push(final);
         
-
+    // select all trials
+var all_data = jsPsych.data.get().csv();
+    //filter just exp trials (plus fixate-trials, other misc.)
+var SCIP1data = jsPsych.data.get().filter({trial_type: 'html-button-response'});
     
+    // get csv representation of data and log to console
+console.log(SCIP1data.csv());
+    
+  function saveData(name, data){
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'write-data-SCIP.php'); // 'write-data-SCIP.php' is the path to the php file in /cgi-bin.
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({filename: name, filedata: data}));
+}
 
+// call the saveData function after the experiment is over 
     jsPsych.init({
-//        display_element: $('#jspsych-target'),
+        display_element: $('#jspsych-target'),
         timeline: timeline,
         default_iti: 500,
-//        preload_images: ['SCIP_yellow-jar-1.png', 'SCIP_blue-jar-2.png'],
-        on_finish: function() {jsPsych.data.displayData('csv');}
-    })
+        preload_images: ['./SCIP_images/Elmo-waves_screenshot.jpeg'],
+        on_finish: function() {saveData("SCIP_data", SCIP1data);}
+    });   
     
-    
-    // select all trials
-var all_data = jsPsych.data.get();
-
-// get csv representation of data and log to console
-console.log(all_data.csv());
     
 </script>
 
