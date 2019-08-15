@@ -140,7 +140,7 @@ var timeline = [];
                 "<p><center> In this game, Elmo will show you which jars of gumballs he likes better than others." + 
                 "<p><center>Your job is to <em>remember</em> what he likes, so that you can help him out later in the game!" + 
                 "<p><center><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' height=500>", 
-        "<center>Press <b>'Next'</b> when you're ready to see which jars of gumballs Elmo likes!<br><br><br>"],
+        "<center><br><br><br>Press <b>'Next'</b> when you're ready to see which jars of gumballs Elmo likes!<br><br><br>"],
         show_clickable_nav: true
     }
     timeline.push(intro);
@@ -174,7 +174,8 @@ var timeline = [];
         
     var testInstructions = {
         type: 'instructions',
-        pages: ["<center><p> Now that Elmo has shown you what he likes, he needs your help!<br>","<center><p> On the next screen, you will see two jars of gumballs. <p> <br> Use the trackpad (laptop) or your finger (tablet) to click on the jar that Elmo would like better!<br><br><br> <b>Are you ready?</b>"],
+        pages: ["<center><p> Now that Elmo has shown you what he likes, he needs your help!<br>",
+                "<center><p> On the next screen, you will see two jars of gumballs.<br>" + "<center><p>Use the trackpad (laptop) or your finger (tablet) to click on the jar that Elmo would like better!<br><br><br> <b>Are you ready?</b>"],
         show_clickable_nav: 'true'
     }
     timeline.push(testInstructions);
@@ -301,11 +302,11 @@ var timeline = [];
         fullscreen_mode: false
     });
     
-    var finale = {
+    var final = {
         type: 'html-keyboard-response',
         stimulus: "<center><br><br><br>Thanks for playing the game with us!",
     }
-    timeline.push(finale);
+    timeline.push(final);
         
 
     
