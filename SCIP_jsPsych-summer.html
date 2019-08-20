@@ -379,7 +379,7 @@ console.log(SCIP1data.csv());
     
   function saveData(name, data){
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', 'write-data-SCIP.php'); // 'write-data-SCIP.php' is the path to the php file in /cgi-bin.
+  xhr.open('POST', '../../../../cgi-bin/write-data-SCIP.php'); // 'write-data-SCIP.php' is the path to the php file in /cgi-bin.
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify({filename: name, filedata: data}));
 }
@@ -390,7 +390,7 @@ console.log(SCIP1data.csv());
         timeline: timeline,
         default_iti: 500,
         preload_images: ['./SCIP_images/Elmo-waves_screenshot.jpeg'],
-        on_finish: function() {saveData("SCIP_data", SCIP1data);}
+        on_finish: function() {saveData("../cgi-bin/SCIP_PP/exp1-data", SCIP1data);}
     });   
     
     
