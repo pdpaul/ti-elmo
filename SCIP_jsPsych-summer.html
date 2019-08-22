@@ -106,9 +106,11 @@ var timeline = [];
         fullscreen_mode: true
     });
     
+/*TODO1: load audio instructions on pages 1,2 */
+/*TODO2: replace page 1 img (jpeg) with vid */
     var intro = {
         type: 'instructions',
-        pages: ["<p><center>This is Elmo!" + "<p> Elmo LOVES gumballs!" + "<p><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' height=500>",
+        pages: ["<p><center>This is Elmo!" + "<p> Elmo LOVES gumballs!" + "<p><video>src='./SCIP_video/SCIB_elmo-waves_OLD.m4v'></video>",
                 "<p><center> In this game, Elmo will show you which jars of gumballs he likes better than others." + 
                 "<p><center>Your job is to <em>remember</em> what he likes, so that you can help him out later in the game!" + 
                 "<p><center><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' height=500>", 
@@ -343,6 +345,9 @@ var all_data = jsPsych.data.get().csv();
     //filter just exp trials (plus fixate-trials, other misc.)
     
 var inputScreenData = jsPsych.data.get().filter({trial_type:'survey-text'}).csv();
+    console.log(inputScreenData);
+    
+    
 var SCIP1data = jsPsych.data.get().filter({trial_type:'html-button-response'}).ignore('internal_node_id').csv(); //alt var name: trialData
 
 
@@ -353,7 +358,7 @@ var SCIP1data = jsPsych.data.get().filter({trial_type:'html-button-response'}).i
     
     // get csv representation of data and log to console
 //console.log(trialData);
-console.log(inputScreenData);
+
 console.log(SCIP1data); //prefixing input screen data (subID/age/list#) to trialData
     console.log(all_data);
     
@@ -370,6 +375,7 @@ console.log(SCIP1data); //prefixing input screen data (subID/age/list#) to trial
         timeline: timeline,
         default_iti: 500,
         preload_images: ['./SCIP_images/Elmo-waves_screenshot.jpeg'],
+        preload_audio: ['./SCIP_audio/SCIP-instructions-2-test.m4a','./SCIP_audio/This-is-elmo-test.m4a'],
         on_finish: function() {saveData("../cgi-bin/SCIP_PP/data/exp1", SCIP1data);}
     });   
     
