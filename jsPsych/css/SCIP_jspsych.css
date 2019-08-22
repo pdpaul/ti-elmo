@@ -48,7 +48,7 @@
 
 .jspsych-display-element {
   font-family: 'Open Sans', 'Arial', sans-serif;
-  font-size: 24px;
+  font-size: 18px;
   line-height: 1.6em;
 }
 
@@ -56,15 +56,15 @@
 
 .jspsych-display-element input[type="text"] {
   font-family: 'Open Sans', 'Arial', sans-serif;
-  font-size: 24px;
+  font-size: 18px;
 }
 
 /* borrowing Bootstrap style for btn elements, but combining styles a bit */
 .jspsych-btn {
-  display: inline-block;
+  position: inline:block;
   padding: 6px 12px;
   margin: 0px;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 400;
   font-family: 'Open Sans', 'Arial', sans-serif;
   cursor: pointer;
@@ -82,8 +82,8 @@
 
 .btn-left-jar {
   position: absolute;
-  top:320px;
-  left: 350px;
+  top:45%;
+  left: 25%;
   padding: 0px 0px;
 /*  opacity: 0.6;*/
   margin: 0px;
@@ -102,16 +102,16 @@
 .btn-left-jar-trspnt {
   background: transparent;
   position: absolute;
-  top:320px;
-  left: 350px;
+  top:44%;
+  left: 25%;
   padding: 100px 70px;
-  opacity: 0.02;
+  opacity: 0.01;
   margin: 0px;
   cursor: pointer;
   line-height: 1.4;
   white-space: nowrap;
   background-image: none;
-  border: 1px green;
+  border: 1px;
   border-radius: 4px;
   color: #333;
   background-color: transparent;
@@ -120,10 +120,10 @@
 .btn-right-jar-trspnt {
   background: transparent;
   position: absolute;
-  top:320px;
-  right: 350px;
-  padding: 100px 70px;
-  opacity: 0.02;
+  top:44%;
+  right: 25.5%;
+  padding: 95px 70px;
+  opacity: 0.01;
   margin: 0px;
   cursor: pointer;
   line-height: 1.4;
@@ -138,8 +138,8 @@
 
 .btn-right-jar {
   position: absolute;
-  top:320px;
-  right: 350px;
+  top:45%;
+  right: 25%;
   padding: 0px 0px;
   margin: 0px;
   font-family: 'Open Sans', 'Arial', sans-serif;

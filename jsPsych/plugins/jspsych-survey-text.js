@@ -15,7 +15,7 @@ jsPsych.plugins['survey-text'] = (function() {
 
   plugin.info = {
     name: 'survey-text',
-    description: '',
+    description: 'plugin for simple survey forms',
     parameters: {
       questions: {
         type: jsPsych.plugins.parameterType.COMPLEX,
