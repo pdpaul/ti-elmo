@@ -50,7 +50,7 @@ jsPsych.plugins['survey-text'] = (function() {
           required: {
             type: jsPsych.plugins.parameterType.BOOL,
             pretty_name: 'Required',
-            default: false,
+            default: true,
             description: 'Require a response'
           },
           name: {

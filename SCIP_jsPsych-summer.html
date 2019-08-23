@@ -18,6 +18,7 @@
         <script src="./jsPsych/plugins/jspsych-fullscreen.js"></script>
         <script src="./jsPsych/plugins/jspsych-instructions.js"></script>
         <script src="./jsPsych/plugins/jspsych-video-button-response.js"></script>
+        <script src="./jsPsych/plugins/jspsych-video-keyboard-response.js"></script>
          
 <!--        <script src="./SCIP_jsPsych-summer.css"> </script>  -->
         <link href="./jsPSych/css/SCIP_jspsych.css" rel="stylesheet" type="text/css"/> 
@@ -29,11 +30,13 @@
         <link type="text/css" href ="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" rel="stylesheet"/>
         
     <style>
-/*        #container {
+        #exp-container {
             position: relative;
             width: 100%;
             max-width: 400px;
         }
+        
+        /*
             .container img {
                 width: 100%;
                 height: auto;
@@ -72,10 +75,12 @@
 </style> 
     </head>
 
-    <body>  <div id="container" style={background-color:#0F0300}>
+    <body>
+            <div id="exp-container" style={background-color:#0F0300}>
                 <div id="btn-left-jar-trspnt"></div>
                 <div id="btn-right-jar-trspnt"></div>
-            </div>     
+                <audio id="audio" src="http://www.soundjay.com/button/beep-07.wav" autoplay="false" ></audio>
+            </div>
     </body>
 
 <script> 
@@ -90,10 +95,10 @@ var timeline = [];
     
     var inputScreen = {
         type: 'survey-text',
-        preamble: "Please enter the following information before proceeding:",
+        preamble: "<img src='./SCIP_images/stanford.png'><b>Language and Cognition Lab</b><br><br>Please enter the following information before proceeding:",
         questions: [
             {prompt: "Subject ID:", placeholder: "e.g. Exp1-023", name:'subjectID'},
-            {prompt: "Age Group", placeholder: "3/4/5/adult", name: 'age'},
+            {prompt: "Age Group:", placeholder: "3/4/5/adult", name: 'age'},
             {prompt: "List Number:", placeholder: "1-8", name: 'listNum'}
         ]
     };
@@ -108,25 +113,36 @@ var timeline = [];
     
 /*TODO1: load audio instructions on pages 1,2 */
 /*TODO2: replace page 1 img (jpeg) with vid */
-    var intro = {
+    
+    /*REF: https://www.jspsych.org/plugins/jspsych-video-keyboard-response/*/
+ /*   var intro1 = {
+        type: 'video-keyboard-response',
+        sources: ['./SCIP_audio/This-is-elmo-test.m4a'],
+        prompt: "<p><center>This is Elmo!" + "<p> Elmo LOVES gumballs!"
+    }*/
+    
+
+   
+    var intro2 = {
         type: 'instructions',
-        pages: ["<p><center>This is Elmo!" + "<p> Elmo LOVES gumballs!" + "<p><video>src='./SCIP_video/SCIB_elmo-waves_OLD.m4v'></video>",
+        pages: [
+            "<p><center>This is Elmo!" + "<p> Elmo LOVES gumballs!" + "<p><video autoplay ><source src='./SCIP_video/Elmo-waves-nosound.m4v'></video>",
                 "<p><center> In this game, Elmo will show you which jars of gumballs he likes better than others." + 
                 "<p><center>Your job is to <em>remember</em> what he likes, so that you can help him out later in the game!" + 
                 "<p><center><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' height=500>", 
         "<center><br><br><br>Press <b>'Next'</b> when you're ready to see which jars of gumballs Elmo likes!<br><br><br>"],
         show_clickable_nav: 'true'
-    }
-    timeline.push(intro);
+    };
+    timeline.push(intro2);
         
     var familiarization = {
         type: 'video-button-response',
         width: 1200, 
         start: 0,
         controls: false,
-        sources: ['SCIP_videos/fam-ALL.mp4'],
+        sources: ['SCIP_video/fam-ALL.mp4'],
         choices: ['continue']
-    }
+    };
     timeline.push(familiarization);
         
     /*
@@ -150,10 +166,16 @@ var timeline = [];
         pages: ["<center><p> Now that Elmo has shown you what he likes, he needs your help!<br>",
                 "<center><p> On the next screen, you will see two jars of gumballs.<br>" + "<center><p>Use the trackpad (laptop) or your finger (tablet) to click on the jar that Elmo would like better!<br><br><br> <b>Are you ready?</b>"],
         show_clickable_nav: 'true'
-    }
+    };
     timeline.push(testInstructions);
+    
+    /*TODO: write function that plays desired sound effects upon click*/
 
-/* TODO: Write a function that plays a sound when image is clicked  */
+/* TODO: Write a function that plays a sound when button is clicked  */
+    function playClickSound() {
+        var clickynoise = document.getElementById("audio");
+        clickynoise.play();
+    }
     
     var fixation = {
             type: 'html-button-response',
@@ -169,7 +191,7 @@ var timeline = [];
         prompt: "Which jar do you think Elmo will pick?",
         choices: ['leftJar','rightJar'],
         button_html: [
-            '<button class="btn-left-jar-trspnt"></button>',
+            '<button class="btn-left-jar-trspnt" onclick="playClickSound()"></button>',
             '<button class="btn-right-jar-trspnt"></button>'
         ],
         margin_vertical: '-1200px',
@@ -364,7 +386,7 @@ console.log(SCIP1data); //prefixing input screen data (subID/age/list#) to trial
     
   function saveData(name, data){
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', '../../../../cgi-bin/write-data-SCIP.php'); // 'write-data-SCIP.php' is the path to the php file in /cgi-bin.
+  xhr.open('POST', '../../../../cgi-bin/write-data-SCIP.php'); // path to php file
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify({filename: name, filedata: data}));
 }
@@ -372,12 +394,26 @@ console.log(SCIP1data); //prefixing input screen data (subID/age/list#) to trial
 // call the saveData function after the experiment is over 
     jsPsych.init({
         //display_element: $('#jspsych-target'),
+        //display_element:$('#container'),
         timeline: timeline,
         default_iti: 500,
         preload_images: ['./SCIP_images/Elmo-waves_screenshot.jpeg'],
         preload_audio: ['./SCIP_audio/SCIP-instructions-2-test.m4a','./SCIP_audio/This-is-elmo-test.m4a'],
+        use_webaudio: false, // temporary setting for testing purposes
+        experiment_width: 750, //max width
         on_finish: function() {saveData("../cgi-bin/SCIP_PP/data/exp1", SCIP1data);}
     });   
+    
+/* CODE FOR MTURK VERSION OF THIS EXP, FOR LOOKING UP TURKER LOCATION (code from GKachergis):
+    
+$.getJSON('https://json.geoiplookup.io/api?callback=?', function(data) {
+  //console.log(JSON.stringify(data, null, 2));
+  jsPsych.data.addProperties({ IP: data.ip, country_code: data.country_code });
+  });  
+  
+    */
+    
+    
     
 </script>
 
