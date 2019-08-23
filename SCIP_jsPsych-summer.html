@@ -70,8 +70,8 @@
                 border: none;
                 cursor: pointer;
                 border-radius: 5px;
-                text-align: center;*/
-            }
+                text-align: center;
+            }*/
 </style> 
     </head>
 
@@ -98,8 +98,8 @@ var timeline = [];
         preamble: "<img src='./SCIP_images/stanford.png'><b>Language and Cognition Lab</b><br><br>Please enter the following information before proceeding:",
         questions: [
             {prompt: "Subject ID:", placeholder: "e.g. Exp1-023", name:'subjectID'},
-            {prompt: "Age Group:", placeholder: "3/4/5/adult", name: 'age'},
-            {prompt: "List Number:", placeholder: "1-8", name: 'listNum'}
+            //{prompt: "List Number:", placeholder: "1-8", name: 'listNum'},
+            {prompt: "Age Group:", placeholder: "3/4/5/adult", name: 'age'}
         ]
     };
         timeline.push(inputScreen); 
@@ -112,22 +112,14 @@ var timeline = [];
     });
     
 /*TODO1: load audio instructions on pages 1,2 */
-/*TODO2: replace page 1 img (jpeg) with vid */
-    
-    /*REF: https://www.jspsych.org/plugins/jspsych-video-keyboard-response/*/
- /*   var intro1 = {
-        type: 'video-keyboard-response',
-        sources: ['./SCIP_audio/This-is-elmo-test.m4a'],
-        prompt: "<p><center>This is Elmo!" + "<p> Elmo LOVES gumballs!"
-    }*/
-    
-
-   
+/*TODO2: set video width to match img on next page; get rid of ugly left margin*/
     var intro2 = {
         type: 'instructions',
         pages: [
-            "<p><center>This is Elmo!" + "<p> Elmo LOVES gumballs!" + "<p><video autoplay ><source src='./SCIP_video/Elmo-waves-nosound.m4v'></video>",
+            "<p><center>This is Elmo!" + "<p> Elmo LOVES gumballs!" + 
+            "<p><video autoplay><source src='./SCIP_video/Elmo-waves-nosound.m4v'></video>",
                 "<p><center> In this game, Elmo will show you which jars of gumballs he likes better than others." + 
+                "<p><center><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' height=500>", 
                 "<p><center>Your job is to <em>remember</em> what he likes, so that you can help him out later in the game!" + 
                 "<p><center><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' height=500>", 
         "<center><br><br><br>Press <b>'Next'</b> when you're ready to see which jars of gumballs Elmo likes!<br><br><br>"],
@@ -137,7 +129,7 @@ var timeline = [];
         
     var familiarization = {
         type: 'video-button-response',
-        width: 1200, 
+        width: 800, 
         start: 0,
         controls: false,
         sources: ['SCIP_video/fam-ALL.mp4'],
@@ -169,9 +161,7 @@ var timeline = [];
     };
     timeline.push(testInstructions);
     
-    /*TODO: write function that plays desired sound effects upon click*/
-
-/* TODO: Write a function that plays a sound when button is clicked  */
+    /*WORK IN PROGRESS: function that plays desired sound effect upon click*/
     function playClickSound() {
         var clickynoise = document.getElementById("audio");
         clickynoise.play();
@@ -371,7 +361,7 @@ var inputScreenData = jsPsych.data.get().filter({trial_type:'survey-text'}).csv(
     
     
 var SCIP1data = jsPsych.data.get().filter({trial_type:'html-button-response'}).ignore('internal_node_id').csv(); //alt var name: trialData
-
+    console.log(SCIP1data); 
 
 //var SCIP1data = inputScreenData.join(trialData); -- join method didn't work
     
@@ -381,7 +371,7 @@ var SCIP1data = jsPsych.data.get().filter({trial_type:'html-button-response'}).i
     // get csv representation of data and log to console
 //console.log(trialData);
 
-console.log(SCIP1data); //prefixing input screen data (subID/age/list#) to trialData
+
     console.log(all_data);
     
   function saveData(name, data){
