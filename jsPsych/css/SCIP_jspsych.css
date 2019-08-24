@@ -10,7 +10,8 @@
 /* Container holding jsPsych content */
 
  .jspsych-display-element {
-   display: flex;
+   display: block;
+   max-height: 80%; /* NEW */
    flex-direction: column;
    overflow-y: auto;
  }
@@ -19,25 +20,37 @@
    outline: none;
  }
 
-.container {
+/*.container {
   position: relative;
-}
+}*/
 
  .jspsych-content-wrapper {
    display: flex;
-   margin: auto;
-   flex: 1 1 100%;
+   justify-content: center; /* TESTING */
+   margin-top: 100px;
+   /*flex: 1 1 100%;*/
    width: 100%;
  }
 
  .jspsych-content {
-   max-width: 95%; /* this is mainly an IE 10-11 fix */
+   /*max-width: 80%; */
+   max-height:500px;
+   margin-left:-10%;
+   float:center;
    text-align: center;
-   margin: auto; /* this is for overflowing content */
+   margin: 0px; 
  }
 
+ /*  saving original for reverting to later
+.jspsych-content {
+   max-width: 95%; this is mainly an IE 10-11 fix 
+   text-align: center;
+   margin: auto;  this is for overflowing content 
+ }  */
+
  .jspsych-top {
-   align-items: flex-start;
+   /*align-items: flex-start;*/
+   align-items: center;  /* TESTING */
  }
 
  .jspsych-middle {
@@ -154,33 +167,26 @@
   border-color: #ccc;
 }
 
-
 .btn-left-jar-trspnt:hover {
   background-color: #ddd;
   border-color: #aaa;
 }
-
 .btn-left-jar:hover {
   background-color: #ddd;
   border-color: #aaa;
 }
-
 .btn-right-jar-trspnt:hover {
   background-color: #ddd;
   border-color: #aaa;
 }
-
 .btn-right-jar:hover {
   background-color: #ddd;
   border-color: #aaa;
 }
-
 .jspsych-btn:hover {
   background-color: #ddd;
   border-color: #aaa;
 }
-
-
 .jspsych-btn:disabled {
   background-color: #eee;
   color: #aaa;
@@ -189,7 +195,6 @@
 }
 
 /* jsPsych progress bar */
-
 #jspsych-progressbar-container {
   color: #555;
   border-bottom: 1px solid #dedede;

@@ -20,7 +20,6 @@
         <script src="./jsPsych/plugins/jspsych-video-button-response.js"></script>
         <script src="./jsPsych/plugins/jspsych-video-keyboard-response.js"></script>
          
-<!--        <script src="./SCIP_jsPsych-summer.css"> </script>  -->
         <link href="./jsPSych/css/SCIP_jspsych.css" rel="stylesheet" type="text/css"/> 
         
         <script src="./jsPsych/mmturkey.js"></script>
@@ -30,18 +29,7 @@
         <link type="text/css" href ="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" rel="stylesheet"/>
         
     <style>
-        #exp-container {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-        }
-        
-        /*
-            .container img {
-                width: 100%;
-                height: auto;
-            }
-
+/*
             .container .left-btn {
                 position: absolute;
                 top: 50%;
@@ -75,13 +63,7 @@
 </style> 
     </head>
 
-    <body>
-            <div id="exp-container" style={background-color:#0F0300}>
-                <div id="btn-left-jar-trspnt"></div>
-                <div id="btn-right-jar-trspnt"></div>
-                <audio id="audio" src="http://www.soundjay.com/button/beep-07.wav" autoplay="false" ></audio>
-            </div>
-    </body>
+    <body></body>
 
 <script> 
 
@@ -93,7 +75,7 @@ var timeline = [];
     };
     timeline.push(welcome);
     
-    var inputScreen = {
+/*    var inputScreen = {
         type: 'survey-text',
         preamble: "<img src='./SCIP_images/stanford.png'><b>Language and Cognition Lab</b><br><br>Please enter the following information before proceeding:",
         questions: [
@@ -102,7 +84,7 @@ var timeline = [];
             {prompt: "Age Group:", placeholder: "3/4/5/adult", name: 'age'}
         ]
     };
-        timeline.push(inputScreen); 
+        timeline.push(inputScreen); */
 
 /* entering fullscreen mode */
     timeline.push({  
@@ -116,14 +98,15 @@ var timeline = [];
     var intro2 = {
         type: 'instructions',
         pages: [
-            "<p><center>This is Elmo!" + "<p> Elmo LOVES gumballs!" + 
-            "<p><video autoplay><source src='./SCIP_video/Elmo-waves-nosound.m4v'></video>",
+            "<p><center>This is Elmo! Elmo <em>loves</em> gumballs!" + 
+            "<div><video autoplay><source src='./SCIP_video/Elmo-waves-nosound.m4v'></video></div>", //page 1
                 "<p><center> In this game, Elmo will show you which jars of gumballs he likes better than others." + 
-                "<p><center><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' height=500>", 
+                "<p><center><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' height=600>", //page 2
                 "<p><center>Your job is to <em>remember</em> what he likes, so that you can help him out later in the game!" + 
-                "<p><center><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' height=500>", 
-        "<center><br><br><br>Press <b>'Next'</b> when you're ready to see which jars of gumballs Elmo likes!<br><br><br>"],
-        show_clickable_nav: 'true'
+                "<p><center><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' height=600>", //page 3
+        "<center><br><br><br>Press <b>'Next'</b> when you're ready to see which jars of gumballs Elmo likes!<br><br><br>"], //page 4
+        show_clickable_nav: 'true',
+        allow_keys: 'true'
     };
     timeline.push(intro2);
         
@@ -181,8 +164,8 @@ var timeline = [];
         prompt: "Which jar do you think Elmo will pick?",
         choices: ['leftJar','rightJar'],
         button_html: [
-            '<button class="btn-left-jar-trspnt" onclick="playClickSound()"></button>',
-            '<button class="btn-right-jar-trspnt"></button>'
+            '<button class="btn-left-jar-trspnt" onclick="playClickSound()">left jar</button>',
+            '<button class="btn-right-jar-trspnt">right jar</button>'
         ],
         margin_vertical: '-1200px',
         is_html: 'true',
