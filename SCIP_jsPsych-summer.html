@@ -19,8 +19,8 @@
         <script src="./jsPsych/plugins/jspsych-instructions.js"></script>
         <script src="./jsPsych/plugins/jspsych-video-button-response.js"></script>
         <script src="./jsPsych/plugins/jspsych-video-keyboard-response.js"></script>
-         
-        <link href="./jsPSych/css/SCIP_jspsych.css" rel="stylesheet" type="text/css"/> 
+       
+        <link href="jsPSych/css/SCIP_jspsych.css" rel="stylesheet" type="text/css"/> 
         
         <script src="./jsPsych/mmturkey.js"></script>
         <script src="./jsPsych/jquery-1.11.2.min.js"></script>
@@ -94,8 +94,7 @@ var timeline = [];
     });
     
 /*TODO1: load audio instructions on pages 1,2 */
-/*TODO2: set video width to match img on next page; get rid of ugly left margin*/
-    var intro2 = {
+/*    var intro2 = {
         type: 'instructions',
         pages: [
             "<p><center>This is Elmo! Elmo <em>loves</em> gumballs!" + 
@@ -107,7 +106,21 @@ var timeline = [];
         "<center><br><br><br>Press <b>'Next'</b> when you're ready to see which jars of gumballs Elmo likes!<br><br><br>"], //page 4
         show_clickable_nav: 'true',
         allow_keys: 'true'
+    };*/
+    var intro2 = {
+        type: 'instructions',
+        pages: [
+            "<p><center>This is Elmo! Elmo <em>loves</em> gumballs!" + 
+            "<div><video autoplay style = 'margin: 10px; width: 800px'><source src='SCIP_video/Elmo-waves-nosound.m4v'></video></div>", //page 1
+                "<p><center> In this game, Elmo will show you which jars of gumballs he likes better than others." + 
+                "<p><center><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' width=800>", //page 2
+                "<p><center>Your job is to <em>remember</em> what he likes, so that you can help him out later in the game!" + 
+                "<p><center><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' width=800>", //page 3
+        "<center><br><br><br>Press <b>'Next'</b> when you're ready to see which jars of gumballs Elmo likes!<br><br><br>"], //page 4
+        show_clickable_nav: 'true',
+        allow_keys: 'true'
     };
+    
     timeline.push(intro2);
         
     var familiarization = {
@@ -152,7 +165,7 @@ var timeline = [];
     
     var fixation = {
             type: 'html-button-response',
-            stimulus:'<p style="font-size: 48px; font-color: blue;">+</p>',
+            stimulus:'<br><br><br><br><p style="font-size: 48px; font-color: blue;">+</p>',
             choices: '',
             prompt: '',
             trial_duration: 400

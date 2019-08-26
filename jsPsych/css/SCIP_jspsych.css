@@ -20,25 +20,30 @@
    outline: none;
  }
 
+ #jspsych-video-box:{
+   outline: blue;
+   margin-right: 200px;
+ }
+
+
 /*.container {
   position: relative;
 }*/
 
  .jspsych-content-wrapper {
    display: flex;
-   justify-content: center; /* TESTING */
-   margin-top: 100px;
-   /*flex: 1 1 100%;*/
+   justify-content: center; 
+   margin-top: auto;
+   flex: 1 1 100%;*/
    width: 100%;
  }
 
  .jspsych-content {
-   /*max-width: 80%; */
-   max-height:500px;
-   margin-left:-10%;
+   max-width: 95%; 
+   max-width:900px;
    float:center;
    text-align: center;
-   margin: 0px; 
+   margin-top: 5%; 
  }
 
  /*  saving original for reverting to later
@@ -49,8 +54,8 @@
  }  */
 
  .jspsych-top {
-   /*align-items: flex-start;*/
-   align-items: center;  /* TESTING */
+   align-items: flex-start;
+   /* align-items: center; */
  }
 
  .jspsych-middle {
