@@ -94,19 +94,6 @@ var timeline = [];
     });
     
 /*TODO1: load audio instructions on pages 1,2 */
-/*    var intro2 = {
-        type: 'instructions',
-        pages: [
-            "<p><center>This is Elmo! Elmo <em>loves</em> gumballs!" + 
-            "<div><video autoplay><source src='./SCIP_video/Elmo-waves-nosound.m4v'></video></div>", //page 1
-                "<p><center> In this game, Elmo will show you which jars of gumballs he likes better than others." + 
-                "<p><center><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' height=600>", //page 2
-                "<p><center>Your job is to <em>remember</em> what he likes, so that you can help him out later in the game!" + 
-                "<p><center><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' height=600>", //page 3
-        "<center><br><br><br>Press <b>'Next'</b> when you're ready to see which jars of gumballs Elmo likes!<br><br><br>"], //page 4
-        show_clickable_nav: 'true',
-        allow_keys: 'true'
-    };*/
     var intro2 = {
         type: 'instructions',
         pages: [
@@ -327,14 +314,14 @@ var timeline = [];
     };
     
     timeline.push(fixation);
-    timeline.push(tt_recapI, fixation);
-    timeline.push(tt_recapII, fixation);
+    timeline.push(tt_recapI,   fixation);
+    timeline.push(tt_recapII,  fixation);
     timeline.push(tt_recapIII, fixation);
-    timeline.push(tt_recapIV, fixation);
-    timeline.push(tt_genI, fixation);
-    timeline.push(tt_genII, fixation);
-    timeline.push(tt_criticalA, fixation);
-    timeline.push(tt_criticalB, fixation);  
+    timeline.push(tt_recapIV,  fixation);
+    timeline.push(tt_genI,     fixation);
+    timeline.push(tt_genII,    fixation);
+    timeline.push(tt_criticalA,fixation);
+    timeline.push(tt_criticalB,fixation);  
         
   /* Exiting fullscreen mode   */      
     timeline.push({
@@ -377,14 +364,35 @@ var SCIP1data = jsPsych.data.get().filter({trial_type:'html-button-response'}).i
   xhr.send(JSON.stringify({filename: name, filedata: data}));
 }
 
+    //arrays with image, audio and video files to be preloaded
+    var images = ['SCIP_images/SCIP_test-trials/r1_Y1-B2O.jpeg', //recapI
+                  'SCIP_images/SCIP_test-trials/r2_B2O-G3.jpeg  ', //recapII
+                  'SCIP_images/SCIP_test-trials/r3_G3-R4O.jpeg', //recapIII
+                  'SCIP_images/SCIP_test-trials/r4_P5-R4O.jpeg', //recapIV
+                  'SCIP_images/SCIP_test-trials/g1_G3-Y1', //genI
+                  'SCIP_images/SCIP_test-trials/g2_P5-G3', //genII
+                  'SCIP_images/SCIP_test-trials/crA_B2O-R4O', //criticalA
+                  'SCIP_images/SCIP_test-trials/crB_R4O-B2O', //criticalB
+                  'SCIP_images/stanford.png',
+                  'SCIP_images/Elmo-waves_screenshot.jpeg'];
+    
+    var audio = ['SCIP_audio/elmo-instr-I.wav',
+                 'SCIP_audio/elmo-instr-II.wav',
+                 'SCIP_audio/elmo-instr-III.wav',
+                 'SCIP_audio/elmo-instr-IV.wav',
+                 'SCIP_audio/elmo-instr-V.wav',
+                 'SCIP_audio/elmo-which-jar.wav',
+                 'SCIP_audio/thanks-for-playing.wav',
+                 'SCIP_audio/This-is-elmo-test.m4a'];
+    
 // call the saveData function after the experiment is over 
     jsPsych.init({
         //display_element: $('#jspsych-target'),
         //display_element:$('#container'),
         timeline: timeline,
         default_iti: 500,
-        preload_images: ['./SCIP_images/Elmo-waves_screenshot.jpeg'],
-        preload_audio: ['./SCIP_audio/SCIP-instructions-2-test.m4a','./SCIP_audio/This-is-elmo-test.m4a'],
+        preload_images: images,
+        preload_audio: audio,
         use_webaudio: false, // temporary setting for testing purposes
         experiment_width: 750, //max width
         on_finish: function() {saveData("../cgi-bin/SCIP_PP/data/exp1", SCIP1data);}
