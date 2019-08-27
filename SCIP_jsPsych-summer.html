@@ -146,8 +146,7 @@ var timeline = [];
         type: 'instructions',
         pages: ["<p> Now that Elmo has shown you what he likes, he needs your help!<br>"+ "<video autoplay><source src='SCIP_audio/elmo-instr-V.wav'></video>",
                 "<p> On the next screen, you will see two jars of gumballs.<br>" + 
-                "<p>Click on the jar that Elmo would like better!" +
-                "<p><b>Are you ready?</b>"+
+                "<p>Click on the jar that Elmo would like better!<p><b>Are you ready?</b>"+
                 "<video autoplay><source src='SCIP_audio/elmo-instr-VI.wav'></video>"],
         show_clickable_nav: 'true'
     };
@@ -340,7 +339,8 @@ var timeline = [];
     
     var goodbye = {
         type: 'html-keyboard-response',
-        stimulus: "<center><br><br><br>Thanks for playing the game with us!",
+        stimulus: ["<center><br><br><br>Thanks for playing the game with us!"+
+        "<video autoplay><source src='SCIP_audio/thanks-for-playing.wav'></video>"]
     }
     timeline.push(goodbye);
         
@@ -397,7 +397,6 @@ var SCIP1data = jsPsych.data.get().filter({trial_type:'html-button-response'}).i
 // call the saveData function after the experiment is over 
     jsPsych.init({
         //display_element: $('#jspsych-target'),
-        //display_element:$('#container'),
         timeline: timeline,
         default_iti: 500,
         //preload_images: images,
