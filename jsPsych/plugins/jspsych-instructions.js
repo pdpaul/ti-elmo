@@ -55,7 +55,7 @@ jsPsych.plugins.instructions = (function() {
         type: jsPsych.plugins.parameterType.BOOL,
         pretty_name: 'Show clickable nav',
         default: false,
-        description: 'If true, then a "Previous" and "Next" button will be displayed beneath the instructions.'
+        description: 'If true, then a "Previous","Next" (and optionally, "Play Audio") button will be displayed beneath the instructions.'
       },
       show_page_number: {
           type: jsPsych.plugins.parameterType.BOOL,
@@ -74,6 +74,12 @@ jsPsych.plugins.instructions = (function() {
         pretty_name: 'Button label next',
         default: 'Next',
         description: 'The text that appears on the button to go forwards.'
+      },
+      button_label_playAudio: {
+        type: jsPsych.plugins.parameterType.STRING,
+        pretty_name: 'Button label play audio',
+        default: 'audio instructions',
+        description: 'The text that appears on the button to play audio instructions.'
       }
     }
   }
@@ -81,11 +87,8 @@ jsPsych.plugins.instructions = (function() {
   plugin.trial = function(display_element, trial) {
 
     var current_page = 0;
-
     var view_history = [];
-
     var start_time = performance.now();
-
     var last_page_update_time = start_time;
 
     function btnListener(evt){
@@ -96,6 +99,9 @@ jsPsych.plugins.instructions = (function() {
     	else if(this.id === 'jspsych-instructions-next'){
     		next();
     	}
+/*        else if (this.id === "jspsych-intructions-audio"){
+            playAudio();  // NEW
+        }*/
     }
 
     function show_current_page() {
@@ -108,7 +114,6 @@ jsPsych.plugins.instructions = (function() {
       }
      
       if (trial.show_clickable_nav) {
-
         var nav_html = "<div class='jspsych-instructions-nav' style='padding: 10px 0px;'>";
         if (trial.allow_backward) {
           var allowed = (current_page > 0 )? '' : "disabled='disabled'";
@@ -120,37 +125,33 @@ jsPsych.plugins.instructions = (function() {
         nav_html += "<button id='jspsych-instructions-next' class='jspsych-btn'"+
             "style='margin-left: 5px;'>"+trial.button_label_next+
             " &gt;</button></div>";
-
         html += nav_html;
+
         display_element.innerHTML = html;
         if (current_page != 0 && trial.allow_backward) {
           display_element.querySelector('#jspsych-instructions-back').addEventListener('click', btnListener);
         }
 
         display_element.querySelector('#jspsych-instructions-next').addEventListener('click', btnListener);
+          
       } else {
         if (trial.show_page_number && trial.pages.length > 1) {
           // page numbers for non-mouse navigation
           html += "<div class='jspsych-instructions-pagenum'>"+pagenum_display+"</div>"
         } 
         display_element.innerHTML = html;
-      }
-      
+      }  
     }
 
     function next() {
-
       add_current_page_to_view_history()
-
       current_page++;
-
       // if done, finish up...
       if (current_page >= trial.pages.length) {
         endTrial();
       } else {
         show_current_page();
       }
-
     }
 
     function back() {
@@ -161,6 +162,11 @@ jsPsych.plugins.instructions = (function() {
 
       show_current_page();
     }
+      
+/*    function playAudio() {
+        var x = document.getElementById("instructions-audio"); 
+        x.play();
+    }*/   //  NEW
 
     function add_current_page_to_view_history() {
 

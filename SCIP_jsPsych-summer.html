@@ -66,6 +66,14 @@
     <body></body>
 
 <script> 
+    
+var x = document.getElementById("audio-instructions"); 
+function playAudio() { 
+  x.play(); 
+} 
+function pauseAudio() { 
+  x.pause(); 
+}
 
 var timeline = [];
         
@@ -97,13 +105,11 @@ var timeline = [];
     var intro2 = {
         type: 'instructions',
         pages: [
-            "<p><center>This is Elmo! Elmo <em>loves</em> gumballs!" + 
-            "<div><video autoplay style = 'margin: 10px; width: 800px'><source src='SCIP_video/Elmo-waves-nosound.m4v'></video></div>", //page 1
-                "<p><center> In this game, Elmo will show you which jars of gumballs he likes better than others." + 
-                "<p><center><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' width=800>", //page 2
-                "<p><center>Your job is to <em>remember</em> what he likes, so that you can help him out later in the game!" + 
-                "<p><center><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' width=800>", //page 3
-        "<center><br><br><br>Press <b>'Next'</b> when you're ready to see which jars of gumballs Elmo likes!<br><br><br>"], //page 4
+            "<p><center>This is Elmo! Elmo <em>loves</em> gumballs!<br><br>" + 
+            "<video autoplay style = 'margin: 10px; height: 400px'><source src='SCIP_video/Elmo-waves-nosound.m4v'></video>"+"<video autoplay><source src='SCIP_audio/elmo-instr-I.wav'></video>",//page 1
+            "<p><center> In this game, Elmo will show you which jars of gumballs he likes better than others." + "<p><center><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' height=400>"+"<video autoplay><source src='SCIP_audio/elmo-instr-II.wav'></video>", //page 2
+            "<p><center>Your job is to <em>remember</em> what he likes, so that you can help him out later in the game!" + "<p><center><img src='./SCIP_images/Elmo-waves_screenshot.jpeg' height=400>"+"<video autoplay><source src='SCIP_audio/elmo-instr-III.wav'></video>", //page 3
+            "<center><br><br><br>Press <b>'Next'</b> when you're ready to see which jars of gumballs Elmo likes!<br><br><br>"+"<video autoplay><source src='SCIP_audio/elmo-instr-IV.wav'></video>"], //page 4
         show_clickable_nav: 'true',
         allow_keys: 'true'
     };
@@ -112,7 +118,7 @@ var timeline = [];
         
     var familiarization = {
         type: 'video-button-response',
-        width: 800, 
+        height: 400, 
         start: 0,
         controls: false,
         sources: ['SCIP_video/fam-ALL.mp4'],
@@ -138,8 +144,11 @@ var timeline = [];
         
     var testInstructions = {
         type: 'instructions',
-        pages: ["<center><p> Now that Elmo has shown you what he likes, he needs your help!<br>",
-                "<center><p> On the next screen, you will see two jars of gumballs.<br>" + "<center><p>Use the trackpad (laptop) or your finger (tablet) to click on the jar that Elmo would like better!<br><br><br> <b>Are you ready?</b>"],
+        pages: ["<p> Now that Elmo has shown you what he likes, he needs your help!<br>"+ "<video autoplay><source src='SCIP_audio/elmo-instr-V.wav'></video>",
+                "<p> On the next screen, you will see two jars of gumballs.<br>" + 
+                "<p>Click on the jar that Elmo would like better!" +
+                "<p><b>Are you ready?</b>"+
+                "<video autoplay><source src='SCIP_audio/elmo-instr-VI.wav'></video>"],
         show_clickable_nav: 'true'
     };
     timeline.push(testInstructions);
@@ -160,7 +169,7 @@ var timeline = [];
     
     var tt_recapI = {
         type: 'html-button-response',
-        stimulus: '<center><img src= "./SCIP_test-trials/r1_Y1-B2O.jpeg" width=800>',
+        stimulus: '<center><img src= "SCIP_images/SCIP_test-trials/r1_Y1-B2O.jpeg" width=800>',
         prompt: "Which jar do you think Elmo will pick?",
         choices: ['leftJar','rightJar'],
         button_html: [
@@ -179,7 +188,7 @@ var timeline = [];
     };
     var tt_recapII = {
         type: 'html-button-response',
-        stimulus: '<center><img src= "./SCIP_test-trials/r2_B2O-G3.jpeg" width=800>',
+        stimulus: '<center><img src= "SCIP_images/SCIP_test-trials/r2_B2O-G3.jpeg" width=800>',
         prompt: "Which jar do you think Elmo will pick?",
         choices: ['leftJar','rightJar'],
         button_html: [
@@ -198,7 +207,7 @@ var timeline = [];
     }; 
     var tt_recapIII = {
         type: 'html-button-response',
-        stimulus: '<center><img src= "./SCIP_test-trials/r3_G3-R4O.jpeg" width=800>',
+        stimulus: '<center><img src= "SCIP_images/SCIP_test-trials/r3_G3-R4O.jpeg" width=800>',
         prompt: "Which jar do you think Elmo will pick?",
         choices: ['leftJar','rightJar'],
         button_html: [
@@ -217,7 +226,7 @@ var timeline = [];
     };      
     var tt_recapIV = {
         type: 'html-button-response',
-        stimulus: '<center><img src= "./SCIP_test-trials/r4_P5-R4O.jpeg" width=800>',
+        stimulus: '<center><img src= "SCIP_images/SCIP_test-trials/r4_P5-R4O.jpeg" width=800>',
         prompt: "Which jar do you think Elmo will pick?",
         choices: ['leftJar','rightJar'],
         button_html: [
@@ -237,7 +246,7 @@ var timeline = [];
     
     var tt_genI = {
         type: 'html-button-response',
-        stimulus: '<center><img src= "./SCIP_test-trials/g1_G3-Y1.jpeg" width=800>',
+        stimulus: '<center><img src= "SCIP_images/SCIP_test-trials/g1_G3-Y1.jpeg" width=800>',
         prompt: "Which jar do you think Elmo will pick?",
         choices: ['leftJar','rightJar'],
         button_html: [
@@ -256,7 +265,7 @@ var timeline = [];
     };
     var tt_genII = {
         type: 'html-button-response',
-        stimulus: '<center><img src= "./SCIP_test-trials/g2_P5-G3.jpeg" width=800>',
+        stimulus: '<center><img src= "SCIP_images/SCIP_test-trials/g2_P5-G3.jpeg" width=800>',
         prompt: "Which jar do you think Elmo will pick?",
         choices: ['leftJar','rightJar'],
         button_html: [
@@ -276,7 +285,7 @@ var timeline = [];
     
     var tt_criticalA = {
         type: 'html-button-response',
-        stimulus: '<center><img src= "./SCIP_test-trials/crA_B2O-R4O.jpeg" width=800>',
+        stimulus: '<center><img src= "SCIP_images/SCIP_test-trials/crA_B2O-R4O.jpeg" width=800>',
         prompt: "Which jar do you think Elmo will pick?",
         choices: ['leftJar','rightJar'],
         button_html: [
@@ -295,7 +304,7 @@ var timeline = [];
     };
     var tt_criticalB = {
         type: 'html-button-response',
-        stimulus: '<center><img src= "./SCIP_test-trials/crB_R4O-B2O.jpeg" width=800>',
+        stimulus: '<center><img src= "SCIP_images/SCIP_test-trials/crB_R4O-B2O.jpeg" width=800>',
         prompt: "Which jar do you think Elmo will pick?",
         choices: ['leftJar','rightJar'],
         button_html: [
@@ -364,26 +373,26 @@ var SCIP1data = jsPsych.data.get().filter({trial_type:'html-button-response'}).i
   xhr.send(JSON.stringify({filename: name, filedata: data}));
 }
 
-    //arrays with image, audio and video files to be preloaded
-    var images = ['SCIP_images/SCIP_test-trials/r1_Y1-B2O.jpeg', //recapI
-                  'SCIP_images/SCIP_test-trials/r2_B2O-G3.jpeg  ', //recapII
-                  'SCIP_images/SCIP_test-trials/r3_G3-R4O.jpeg', //recapIII
-                  'SCIP_images/SCIP_test-trials/r4_P5-R4O.jpeg', //recapIV
-                  'SCIP_images/SCIP_test-trials/g1_G3-Y1', //genI
-                  'SCIP_images/SCIP_test-trials/g2_P5-G3', //genII
-                  'SCIP_images/SCIP_test-trials/crA_B2O-R4O', //criticalA
-                  'SCIP_images/SCIP_test-trials/crB_R4O-B2O', //criticalB
-                  'SCIP_images/stanford.png',
-                  'SCIP_images/Elmo-waves_screenshot.jpeg'];
+/*    //arrays with image, audio and video files to be preloaded
+    var images = ['./SCIP_images/SCIP_test-trials/r1_Y1-B2O.jpeg', //recapI
+                  './SCIP_images/SCIP_test-trials/r2_B2O-G3.jpeg  ', //recapII
+                  './SCIP_images/SCIP_test-trials/r3_G3-R4O.jpeg', //recapIII
+                  './SCIP_images/SCIP_test-trials/r4_P5-R4O.jpeg', //recapIV
+                  './SCIP_images/SCIP_test-trials/g1_G3-Y1', //genI
+                  './SCIP_images/SCIP_test-trials/g2_P5-G3', //genII
+                  './SCIP_images/SCIP_test-trials/crA_B2O-R4O', //criticalA
+                  './SCIP_images/SCIP_test-trials/crB_R4O-B2O', //criticalB
+                  './SCIP_images/stanford.png',
+                  './SCIP_images/Elmo-waves_screenshot.jpeg'];
     
-    var audio = ['SCIP_audio/elmo-instr-I.wav',
-                 'SCIP_audio/elmo-instr-II.wav',
-                 'SCIP_audio/elmo-instr-III.wav',
-                 'SCIP_audio/elmo-instr-IV.wav',
-                 'SCIP_audio/elmo-instr-V.wav',
-                 'SCIP_audio/elmo-which-jar.wav',
-                 'SCIP_audio/thanks-for-playing.wav',
-                 'SCIP_audio/This-is-elmo-test.m4a'];
+    var audio = ['./SCIP_audio/elmo-instr-I.wav',
+                 './SCIP_audio/elmo-instr-II.wav',
+                 './SCIP_audio/elmo-instr-III.wav',
+                 './SCIP_audio/elmo-instr-IV.wav',
+                 './SCIP_audio/elmo-instr-V.wav',
+                 './SCIP_audio/elmo-which-jar.wav',
+                 './SCIP_audio/thanks-for-playing.wav',
+                 './SCIP_audio/This-is-elmo-test.m4a'];*/
     
 // call the saveData function after the experiment is over 
     jsPsych.init({
@@ -391,8 +400,8 @@ var SCIP1data = jsPsych.data.get().filter({trial_type:'html-button-response'}).i
         //display_element:$('#container'),
         timeline: timeline,
         default_iti: 500,
-        preload_images: images,
-        preload_audio: audio,
+        //preload_images: images,
+        //preload_audio: audio,
         use_webaudio: false, // temporary setting for testing purposes
         experiment_width: 750, //max width
         on_finish: function() {saveData("../cgi-bin/SCIP_PP/data/exp1", SCIP1data);}
