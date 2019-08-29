@@ -20,7 +20,7 @@
         <script src="./jsPsych/plugins/jspsych-video-button-response.js"></script>
         <script src="./jsPsych/plugins/jspsych-video-keyboard-response.js"></script>
        
-        <link href="jsPSych/css/SCIP_jspsych.css" rel="stylesheet" type="text/css"/> 
+        <link href="jsPsych/css/SCIP_jspsych.css" rel="stylesheet" type="text/css"/> 
         
         <script src="./jsPsych/mmturkey.js"></script>
         <script src="./jsPsych/jquery-1.11.2.min.js"></script>
@@ -364,7 +364,7 @@ var SCIP1data = jsPsych.data.get().filter({trial_type:'html-button-response'}).i
     
   function saveData(name, data){
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', '../../../../cgi-bin/write-data-SCIP.php'); // path to php file
+  xhr.open('POST', '../../../../cgi-bin/SCIP_PP/write-data-SCIP.php'); // path to php file
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.send(JSON.stringify({filename: name, filedata: data}));
 }
@@ -399,7 +399,7 @@ var SCIP1data = jsPsych.data.get().filter({trial_type:'html-button-response'}).i
         //preload_audio: audio,
         //use_webaudio: false, // temporary setting for testing purposes
         experiment_width: 750, //max width
-        on_finish: function() {saveData("../../../../cgi-bin/SCIP_PP/data/exp1", SCIP1data);}
+        on_finish: function() {saveData("SCIP_exp1", SCIP1data);}
     });   
     
 /* CODE FOR MTURK VERSION OF THIS EXP, FOR LOOKING UP TURKER LOCATION (code from GKachergis):
