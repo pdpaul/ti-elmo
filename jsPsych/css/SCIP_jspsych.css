@@ -11,6 +11,7 @@
 
  .jspsych-display-element {
    display: block;
+   justify-content: center;
    max-height: 80%; /* NEW */
    flex-direction: column;
    overflow-y: auto;
@@ -20,10 +21,10 @@
    outline: none;
  }
 
- #jspsych-video-box:{
+/* #jspsych-video-box:{
    outline: blue;
-   margin-right: 200px;
- }
+   margin-right: 0px;
+ }*/
 
 
 /*.container {
@@ -31,7 +32,8 @@
 }*/
 
  .jspsych-content-wrapper {
-   display: flex;
+/*   display: flex;*/
+   display:block; 
    justify-content: center;
    align-items: center;
    margin-top: 2%;
@@ -173,8 +175,7 @@
   border-color: #ccc;
 }
 
-#instructions-audio{
-    controls:true;
+#audio-instructions-{
 }
 
 .btn-left-jar-trspnt:hover {

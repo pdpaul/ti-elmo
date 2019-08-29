@@ -67,13 +67,13 @@
 
 <script> 
     
-var x = document.getElementById("audio-instructions"); 
-function playAudio() { 
-  x.play(); 
-} 
-function pauseAudio() { 
-  x.pause(); 
-}
+//var x = document.getElementById("audio-instructions"); 
+//function playAudio() { 
+//  x.play(); 
+//} 
+//function pauseAudio() { 
+//  x.pause(); 
+//}
 
 var timeline = [];
         
@@ -101,7 +101,6 @@ var timeline = [];
         fullscreen_mode: true
     });
     
-/*TODO1: load audio instructions on pages 1,2 */
     var intro2 = {
         type: 'instructions',
         pages: [
@@ -113,12 +112,11 @@ var timeline = [];
         show_clickable_nav: 'true',
         allow_keys: 'true'
     };
-    
     timeline.push(intro2);
         
     var familiarization = {
         type: 'video-button-response',
-        height: 400, 
+        height: 600, 
         start: 0,
         controls: false,
         sources: ['SCIP_video/fam-ALL.mp4'],
@@ -129,7 +127,7 @@ var timeline = [];
     /*
     var familiarization = {
         type: 'video',
-        width: 800, 
+        height: 400, 
         start: 0,
         controls: true,
         timeline: [
@@ -146,9 +144,9 @@ var timeline = [];
         type: 'instructions',
         pages: ["<p> Now that Elmo has shown you what he likes, he needs your help!<br>"+ "<video autoplay><source src='SCIP_audio/elmo-instr-V.wav'></video>",
                 "<p> On the next screen, you will see two jars of gumballs.<br>" + 
-                "<p>Click on the jar that Elmo would like better!<p><b>Are you ready?</b>"+
-                "<video autoplay><source src='SCIP_audio/elmo-instr-VI.wav'></video>"],
-        show_clickable_nav: 'true'
+                "<p>Click on the jar that Elmo would like better!"+
+                "<div><video autoplay><source src='SCIP_audio/elmo-instr-VI.wav'></video></div>"],
+        show_clickable_nav: 'false'
     };
     timeline.push(testInstructions);
     
@@ -340,7 +338,7 @@ var timeline = [];
     var goodbye = {
         type: 'html-keyboard-response',
         stimulus: ["<center><br><br><br>Thanks for playing the game with us!"+
-        "<video autoplay><source src='SCIP_audio/thanks-for-playing.wav'></video>"]
+        "<div><video autoplay><source src='SCIP_audio/thanks-for-playing.wav'></video></div>"]
     }
     timeline.push(goodbye);
         
@@ -351,7 +349,6 @@ var all_data = jsPsych.data.get().csv();
 var inputScreenData = jsPsych.data.get().filter({trial_type:'survey-text'}).csv();
     console.log(inputScreenData);
     
-    
 var SCIP1data = jsPsych.data.get().filter({trial_type:'html-button-response'}).ignore('internal_node_id').csv(); //alt var name: trialData
     console.log(SCIP1data); 
 
@@ -360,10 +357,9 @@ var SCIP1data = jsPsych.data.get().filter({trial_type:'html-button-response'}).i
 //var rt_data = SCIP1data.select('rt');
 //rt_data.mean();
     
-    // get csv representation of data and log to console
+    
+// get csv representation of data and log to console
 //console.log(trialData);
-
-
     console.log(all_data);
     
   function saveData(name, data){
@@ -403,7 +399,7 @@ var SCIP1data = jsPsych.data.get().filter({trial_type:'html-button-response'}).i
         //preload_audio: audio,
         //use_webaudio: false, // temporary setting for testing purposes
         experiment_width: 750, //max width
-        on_finish: function() {saveData("../cgi-bin/SCIP_PP/data/exp1", SCIP1data);}
+        on_finish: function() {saveData("../../../../cgi-bin/SCIP_PP/data/exp1", SCIP1data);}
     });   
     
 /* CODE FOR MTURK VERSION OF THIS EXP, FOR LOOKING UP TURKER LOCATION (code from GKachergis):
