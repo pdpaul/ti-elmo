@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = TRUE, dev = c('png', 'pdf'),fig.align = 'center', f
 
 library(here)
 library(langcog)   #install.packages("devtools"); devtools::install_github("langcog/langcog")
-library(Hmisc) # --- could use this for alt. bootstrapping fns in multi_boot_standard doesn't work
+library(Hmisc) # --- could use this for alt. bootstrapping fns
 
 # added 9-27-19 - I
 library(stringr) #processing strings
