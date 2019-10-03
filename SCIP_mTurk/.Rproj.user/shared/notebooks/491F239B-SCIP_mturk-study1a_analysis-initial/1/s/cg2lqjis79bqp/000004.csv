@@ -1,0 +1,11 @@
+"0","library(langcog)   #install.packages(""devtools""); devtools::install_github(""langcog/langcog"")
+"
+"2","
+Attaching package: ‘langcog’
+
+"
+"2","The following object is masked from ‘package:base’:
+
+    scale
+
+"
