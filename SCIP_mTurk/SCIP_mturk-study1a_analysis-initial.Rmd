@@ -365,6 +365,7 @@ ggplot(by_trial.type, aes(x = type, y = mean, fill = type)) +
   scale_fill_brewer(palette = "Set1") + 
   theme(text = element_text(size = 20),
         legend.position = "none")
+
   
 ```
   
@@ -393,11 +394,11 @@ ggplot(by_block, aes(x = blockNum, y = mean)) +
   scale_fill_brewer(palette = "Set1") + 
   theme(text = element_text(size = 20),
         legend.position = "none")
+
 ```
   
   
-  
-  # performance by trial type, separated by block 
+## performance by trial type, separated by block 
   
 ```{r}
 by_type_block <- dfs %>% 
@@ -411,25 +412,73 @@ by_type_block <- dfs %>%
   mutate(type = factor(type, levels = c("C", "G", "R"),
                              labels = c("critical", "generalization", "recap")))
 
+# pretty dot plot 
 ggplot(by_type_block, aes(x = blockNum, y = mean, fill = type)) + 
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper),
                   shape = 21,  # fillable circles 
                   size = 1,
                   position = "jitter") + 
   geom_hline(yintercept = .5, lty = 2) +
-  labs(x = "Block Number",
+  labs(fill = "Trial Type",
+       x = "Block Number",
        y = "Proportion Correct") + 
   ylim(0,1) + 
   theme_classic() + 
   scale_fill_brewer(palette = "Set1") + 
-  theme(text = element_text(size = 20),
-        legend.position = "none")
+  theme(text = element_text(size = 18))
+
+# boxplot of accuracy as a function of trial type
+plot(mean~type, data = by_type_block, xlab = "trial type", ylab = "mean accuracy", main="Accuracy as a function of trial type") 
+
+# boxplot of accuracy as a function of block number
+plot(mean~blockNum, data = by_type_block, xlab = "block number", ylab = "mean accuracy", main = "Accuracy as a function of block number") 
+
+
+```
+  
+## other (TBD)  
+
+```{r}
+
+by_subject_type <- dfs %>% 
+  mutate(type = str_sub(trial, start = 1, end = 1)) %>% 
+  group_by(subjectNum, type) %>% 
+  summarise(acc = mean(acc)) %>% 
+  ungroup %>% 
+  mutate(type = factor(type, levels = c("C", "G", "R"),
+                             labels = c("critical", "gen", "recap")))
+  
+
+# linear regression  
+fit1 <- lm(subjectNum~acc,data = by_subject_type)
+summary(fit1)
+plot(subjectNum~acc, data = by_subject_type)
+
+# nah
+ggplot(by_subject_type, aes(acc,type)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+plot(acc~type, data = by_subject_type)  # keep 
 
 ```
   
   
-  (e) relationship between performance on recap (R1:R4) vs. critical trials
-  (e) relationship between performance on inner-recap (R2, R3) vs. critical trials
+##relationship between performance on recap (R1:R4) vs. critical trials
+
+```{r}
+
+```
+
+
+##relationship between performance on inner-recap (R2, R3) vs. critical trials
+
+```{r}
+
+
+```
+
+
 (4) Analyses -- 
 
 
