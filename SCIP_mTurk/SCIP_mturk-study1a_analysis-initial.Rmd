@@ -11,8 +11,7 @@ output:
 ```{r setup, include=FALSE, echo = FALSE, cache = FALSE}
 #knitr::opts_chunk$set(echo = TRUE)
 
-# chunk below supposed to help with saving plots as .png files; 
-    # not working quite yet
+# edited line below to help with saving plots as .png files; 
 knitr::opts_chunk$set(echo = TRUE, dev = c('png', 'pdf'),fig.align = 'center', fig.width=4, fig.height=4) 
    
 ```
