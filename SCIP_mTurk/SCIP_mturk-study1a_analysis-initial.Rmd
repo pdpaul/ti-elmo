@@ -429,17 +429,17 @@ ggplot(by_type_block, aes(x = blockNum, y = mean, fill = type)) +
   theme(text = element_text(size = 18))
 
 # boxplot of accuracy as a function of trial type
-plot(mean~type, data = by_type_block, xlab = "trial type", ylab = "mean accuracy", main="Accuracy as a function of trial type") 
+plot(mean~type, data = by_type_block, xlab = "trial type", ylab = "mean accuracy", main="Accuracy by trial type") 
 
 # boxplot of accuracy as a function of block number
-plot(mean~blockNum, data = by_type_block, xlab = "block number", ylab = "mean accuracy", main = "Accuracy as a function of block number") 
+plot(mean~blockNum, data = by_type_block, xlab = "block number", ylab = "mean accuracy", main = "Accuracy by block number") 
 
 
 ```
   
 ## other (TBD)  
 
-```{r}
+```{r, eval=FALSE, include=FALSE, echo=FALSE}
 
 by_subject_type <- dfs %>% 
   mutate(type = str_sub(trial, start = 1, end = 1)) %>% 
@@ -468,6 +468,26 @@ plot(acc~type, data = by_subject_type)  # keep
 ##relationship between performance on recap (R1:R4) vs. critical trials
 
 ```{r}
+by_Cr_R <- dfs %>% 
+  mutate(type = str_sub(trial, start = 1, end = 1)) %>% 
+  filter(type != "G") %>% 
+  group_by(subjectNum, type) %>% 
+  summarise(acc = mean(acc)) %>% 
+  ungroup %>% 
+  mutate(type = factor(type, levels = c("C", "R"))) %>% 
+  spread(type, acc)
+
+#correlation b/w recap performance and critical trial performance
+cor.test(by_Cr_R$C, by_Cr_R$R)
+
+cor(by_Cr_R)
+  
+```
+
+
+##relationship between performance on inner-recap (R2, R3) vs. critical trials
+
+```{r}
 # df with critical and inner-recap trial acc per participant
 by_Cr_IR <- dfs %>% 
   mutate(type = str_sub(trial, start = 1, end = 1)) %>% 
@@ -492,16 +512,6 @@ cor(by_Cr_IR)
   ggplot(by_Cr_IR, aes(x=C, y=R)) +
   geom_point(size=2) +
   geom_smooth(method=lm)
-  
-  
-  
-```
-
-
-##relationship between performance on inner-recap (R2, R3) vs. critical trials
-
-```{r}
-
 
 ```
 
