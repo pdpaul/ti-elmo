@@ -35,6 +35,7 @@ library(summarytools)  # must have XQuartz installed
 library(DT)
 library(tidyverse)  #note: contains ggplot2, dplyr, tidyr
 library(car)
+library(lme4)
 
 ```
 
@@ -517,6 +518,18 @@ cor(by_Cr_IR)
 
 # Analyses 
 
-TBD
+## Planned primary analysis:
+```{r analysis-1}
+data <- dfs %>% 
+  mutate(type = str_sub(trial, start = 1, end = 1))  %>% 
+  mutate(type = factor(type, levels = c("C", "G", "R"))) 
 
+glmer(acc ~ type + (type | subjectNum), data = data, family = “binomial”)
+
+```
+
+## Planned secondary analyses: 
+```{r analysis-2}
+
+```
 
