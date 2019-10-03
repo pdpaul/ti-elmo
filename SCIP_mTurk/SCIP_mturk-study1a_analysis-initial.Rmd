@@ -368,7 +368,7 @@ ggplot(by_trial.type, aes(x = type, y = mean, fill = type)) +
   
 ```
   
-  # Performance by block (aggregate)
+## Performance by block (aggregate)
   
   (c) Block 1 vs. Block 2
   
