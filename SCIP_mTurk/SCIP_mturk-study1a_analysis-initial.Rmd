@@ -34,6 +34,7 @@ library(summarytools)  # must have XQuartz installed
 # getting following error: package ‘summarytools’ was built under R version 3.5.2 couldn't connect to display ":0"system has no X11 capabilities, therefore only ascii graphs will be produced by dfSummary()
 library(DT)
 library(tidyverse)  #note: contains ggplot2, dplyr, tidyr
+library(car)
 
 ```
 
@@ -467,7 +468,33 @@ plot(acc~type, data = by_subject_type)  # keep
 ##relationship between performance on recap (R1:R4) vs. critical trials
 
 ```{r}
+# df with critical and inner-recap trial acc per participant
+by_Cr_IR <- dfs %>% 
+  mutate(type = str_sub(trial, start = 1, end = 1)) %>% 
+  filter(type != "G") %>% 
+  filter(trial != "R1") %>% 
+  filter(trial != "R4") %>%   # I'm sure I can be more efficient here :)
+  group_by(subjectNum, type) %>% 
+  summarise(acc = mean(acc)) %>% 
+  ungroup %>% 
+  mutate(type = factor(type, levels = c("C", "R"))) %>% 
+  spread(type, acc)
 
+#TODO: plotting critical-trial acc against inner-recap acc
+  
+#correlation 
+cor.test(by_Cr_IR$C, by_Cr_IR$R)
+
+cor(by_Cr_IR)
+
+
+# Not quite right
+  ggplot(by_Cr_IR, aes(x=C, y=R)) +
+  geom_point(size=2) +
+  geom_smooth(method=lm)
+  
+  
+  
 ```
 
 
@@ -478,7 +505,8 @@ plot(acc~type, data = by_subject_type)  # keep
 
 ```
 
+# Analyses 
 
-(4) Analyses -- 
+TBD
 
 
