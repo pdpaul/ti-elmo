@@ -8,10 +8,14 @@ output:
     toc_depth: 2
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+```{r setup, include=FALSE, echo = FALSE, cache = FALSE}
+#knitr::opts_chunk$set(echo = TRUE)
 
+# chunk below supposed to help with saving plots as .png files; 
+    # not working quite yet
+knitr::opts_chunk$set(echo = TRUE, dev = c('png', 'pdf'),fig.align = 'center', fig.width=4, fig.height=4) 
+   
+```
 # Load packages
 
 ```{r loadPackages, message=FALSE, warning=FALSE}
@@ -335,7 +339,7 @@ ggplot(ms, aes(x = trial, y = mean, fill = colorindex)) +
   scale_fill_brewer(palette = "Set1") + 
   theme(text = element_text(size = 20))
 
-
+#ggsave("SCIP1a_acc-by-trial.png")
 
 ```
  
@@ -368,6 +372,7 @@ ggplot(by_trial.type, aes(x = type, y = mean, fill = type)) +
   theme(text = element_text(size = 20),
         legend.position = "none")
 
+#ggsave("SCIP1a_acc-by-type.png")
   
 ```
   
@@ -396,6 +401,8 @@ ggplot(by_block, aes(x = blockNum, y = mean)) +
   scale_fill_brewer(palette = "Set1") + 
   theme(text = element_text(size = 20),
         legend.position = "none")
+
+#ggsave("SCIP1a_acc-by-block.png")
 
 ```
   
@@ -432,6 +439,9 @@ ggplot(by_type_block, aes(x = blockNum, y = mean, fill = type)) +
 # boxplot of accuracy as a function of trial type
 plot(mean~type, data = by_type_block, xlab = "trial type", ylab = "mean accuracy", main="Accuracy by trial type") 
 
+#ggsave("SCIP1a_boxplot_acc-by-type-by-block.png")
+
+
 # boxplot of accuracy as a function of block number
 plot(mean~blockNum, data = by_type_block, xlab = "block number", ylab = "mean accuracy", main = "Accuracy by block number") 
 
@@ -449,17 +459,7 @@ by_subject_type <- dfs %>%
   ungroup %>% 
   mutate(type = factor(type, levels = c("C", "G", "R"),
                              labels = c("critical", "gen", "recap")))
-  
 
-# linear regression  
-fit1 <- lm(subjectNum~acc,data = by_subject_type)
-summary(fit1)
-plot(subjectNum~acc, data = by_subject_type)
-
-# nah
-ggplot(by_subject_type, aes(acc,type)) +
-  geom_point() +
-  geom_smooth(method = "lm")
 
 plot(acc~type, data = by_subject_type)  # keep 
 
@@ -524,7 +524,7 @@ data <- dfs %>%
   mutate(type = str_sub(trial, start = 1, end = 1))  %>% 
   mutate(type = factor(type, levels = c("C", "G", "R"))) 
 
-glmer(acc ~ type + (type | subjectNum), data = data, family = “binomial”)
+#glmer(acc ~ type + (type | subjectNum), data = data, family = “binomial”)
 
 ```
 
