@@ -397,8 +397,35 @@ ggplot(by_block, aes(x = blockNum, y = mean)) +
   
   
   
-  (d) performance 
+  # performance by trial type, separated by block 
   
+```{r}
+by_type_block <- dfs %>% 
+  mutate(type = str_sub(trial, start = 1, end = 1)) %>% 
+  group_by(blockNum,type,subjectNum) %>% 
+  summarise(acc = mean(acc)) %>% 
+  multi_boot_standard(col = "acc") %>% 
+  ungroup %>% 
+  mutate(blockNum = factor(blockNum, levels = c("1", "2"),
+                           labels = c("Block 1", "Block 2"))) %>% 
+  mutate(type = factor(type, levels = c("C", "G", "R"),
+                             labels = c("critical", "generalization", "recap")))
+
+ggplot(by_type_block, aes(x = blockNum, y = mean, fill = type)) + 
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper),
+                  shape = 21,  # fillable circles 
+                  size = 1,
+                  position = "jitter") + 
+  geom_hline(yintercept = .5, lty = 2) +
+  labs(x = "Block Number",
+       y = "Proportion Correct") + 
+  ylim(0,1) + 
+  theme_classic() + 
+  scale_fill_brewer(palette = "Set1") + 
+  theme(text = element_text(size = 20),
+        legend.position = "none")
+
+```
   
   
   (e) relationship between performance on recap (R1:R4) vs. critical trials
