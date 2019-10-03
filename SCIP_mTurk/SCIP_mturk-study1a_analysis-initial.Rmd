@@ -315,14 +315,14 @@ ms <- dfs %>%
   group_by(trial, subjectNum) %>%
   summarise(acc = mean(acc)) %>%
   multi_boot_standard(col = "acc") %>% 
-  mutate(colorindex = str_sub(trial, end = -2),
+  mutate(colorindex = str_sub(trial, end = -2), #??
          colorindex = factor(colorindex,
                              levels = c("Cr", "G", "R"),
                              labels = c("critical", "generalization", "recap")))
 
 ggplot(ms, aes(x = trial, y = mean, fill = colorindex)) + 
   geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper),
-                  shape = 21,
+                  shape = 21,  # fillable circles 
                   size = 1) + 
   geom_hline(yintercept = .5, lty = 2) +
   labs(fill = "Trial Type",
@@ -343,17 +343,65 @@ ggplot(ms, aes(x = trial, y = mean, fill = colorindex)) +
 - critical vs. generalization vs. recap
   
 ```{r}
- 
+ by_trial.type <- dfs %>% 
+  mutate(type = str_sub(trial, start = 1, end = 1)) %>% 
+  group_by(type, subjectNum) %>% 
+  summarise(acc = mean(acc)) %>%
+  multi_boot_standard(col = "acc") %>% 
+  ungroup %>% 
+  mutate(type = factor(type, levels = c("C", "G", "R"),
+                             labels = c("critical", "generalization", "recap")))
+  
+
+ggplot(by_trial.type, aes(x = type, y = mean, fill = type)) + 
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper),
+                  shape = 21,  # fillable circles 
+                  size = 1) + 
+  geom_hline(yintercept = .5, lty = 2) +
+  labs(x = "Trial Type",
+       y = "Proportion Correct") + 
+  ylim(0,1) + 
+  theme_classic() + 
+  scale_fill_brewer(palette = "Set1") + 
+  theme(text = element_text(size = 20),
+        legend.position = "none")
+  
+```
+  
+  # Performance by block (aggregate)
+  
+  (c) Block 1 vs. Block 2
+  
+```{r}
+by_block <- dfs %>% 
+  group_by(blockNum,subjectNum) %>% 
+  summarise(acc = mean(acc)) %>% 
+  multi_boot_standard(col = "acc") %>% 
+  ungroup %>% 
+  mutate(blockNum = factor(blockNum, levels = c("1", "2"),
+                             labels = c("Block 1", "Block 2")))
+
+ggplot(by_block, aes(x = blockNum, y = mean)) + 
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper),
+                  shape = 21,  # fillable circles 
+                  size = 1) + 
+  geom_hline(yintercept = .5, lty = 2) +
+  labs(x = "Block Number",
+       y = "Proportion Correct") + 
+  ylim(0,1) + 
+  theme_classic() + 
+  scale_fill_brewer(palette = "Set1") + 
+  theme(text = element_text(size = 20),
+        legend.position = "none")
 ```
   
   
   
+  (d) performance 
   
   
   
-  
-  (c) performance by block 
-  (d) relationship between performance on recap (R1:R4) vs. critical trials
+  (e) relationship between performance on recap (R1:R4) vs. critical trials
   (e) relationship between performance on inner-recap (R2, R3) vs. critical trials
 (4) Analyses -- 
 

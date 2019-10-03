@@ -1,7 +1,0 @@
-"0","dfg <- df %>%  
-  gather(variable, value, `G2-PG_1`:R4_correct) %>%  # puts cols 2:9 (On/Off ""responses"") in 'variable' col, 
-                                                     # next 8 (correct) in 'value' column
-    mutate(variable = str_replace(variable, ""-"", ""_"")) %>% # deal with naming issue
-    separate(variable, into = c(""trial"", ""variable"")) # splits values in 'variable' by '_'
-"
-"2","Expected 2 pieces. Additional pieces discarded in 488 rows [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ...]."
