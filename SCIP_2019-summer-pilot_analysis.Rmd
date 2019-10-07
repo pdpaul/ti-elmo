@@ -1,0 +1,64 @@
+---
+title: "SCIP_2019-summer-pilot_analysis"
+author: "Pooja Paul"
+date: "10/7/2019"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE, echo = FALSE, cache = FALSE}
+#knitr::opts_chunk$set(echo = TRUE)
+# edited line below to help with saving plots as .png files; 
+knitr::opts_chunk$set(echo = TRUE, dev = c('png', 'pdf'),fig.align = 'center') 
+   
+```
+# Load packages
+
+```{r loadPackages, message=FALSE, warning=FALSE}
+library(here)
+library(langcog)   #install.packages("devtools"); devtools::install_github("langcog/langcog")
+library(Hmisc) # --- could use this for alt. bootstrapping fns
+# added 9-27-19 - I
+library(stringr) #processing strings
+library(compute.es) #for calculating effect sizes
+library(lme4) 
+#library(regex) 
+#added 9-27-19 - II
+# install.packages(c("skimr", "visdat", "summarytools", "DT"))
+library(skimr)
+library(visdat)
+library(summarytools)  # must have XQuartz installed 
+# getting following error: package ‘summarytools’ was built under R version 3.5.2 couldn't connect to display ":0"system has no X11 capabilities, therefore only ascii graphs will be produced by dfSummary()
+library(DT)
+library(tidyverse)  #note: contains ggplot2, dplyr, tidyr
+library(car)
+library(lme4)
+```
+
+# Structure data
+
+Steps in data processing pipeline:
+
+(1) Load csv file 
+
+```{r loadData}
+# STEP 1 #
+rawData_wide <- read_csv(here::here("SCIP_summer-pilot_data_ALL.csv"))
+head(rawData_wide)
+```
+
+(2) processing
+
+```{r processing}
+df <- rawData_wide %>% 
+  select(-(prefam:tot_acc) %>% 
+ 
+
+
+```
+
+
+
+
