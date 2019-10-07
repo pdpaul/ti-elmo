@@ -12,7 +12,7 @@ output:
 #knitr::opts_chunk$set(echo = TRUE)
 
 # edited line below to help with saving plots as .png files; 
-knitr::opts_chunk$set(echo = TRUE, dev = c('png', 'pdf'),fig.align = 'center', fig.width=4, fig.height=4) 
+knitr::opts_chunk$set(echo = TRUE, dev = c('png', 'pdf'),fig.align = 'center') 
    
 ```
 # Load packages
@@ -49,7 +49,7 @@ Steps in data processing pipeline:
 (1) Load csv file containing raw ON/OFF data (Qualtrics 'Hot Spots' Question type) 
     -- Note: no timing info included in this datafile.
 
-```{r loadData, eval=FALSE}
+```{r loadData}
 # STEP 1 #
 rawData_wide <- read_csv(here::here("SCIP_adult_study1a_acc-rawData.csv"))
 head(rawData_wide)
@@ -61,196 +61,45 @@ head(rawData_wide)
       (c) additional filtering
       
 
-```{r tidyingUp, eval=FALSE}
-#(a) NOT REQUIRED: selecting subset of columns needed for calculating accuracy per trial
+```{r tidyingUp}
+#(a) selecting subset of columns needed for calculating accuracy per trial
 # # Use this to positively select req. cols if working directly off qualtrics output csv with many extraneous cols:
-  #
-  # select(subjectNum,
-  #        G2.PG_1,G2.PG_2,
-  #        R3.GR_1,R3.GR_2,
-  #        R2.BG_1,R2.BG_2,
-  #        CrB.RB_1,CrB.RB_2,
-  #        R1.YB_1,R1.YB_2,
-  #        G1.GY_1,G1.GY_2,
-  #        CrA.BR_1,CrA.BR_2,
-  #        R4.PR_1,R4.PR_2)
-       
-
-#(b) adding columns for  <trialname>_correct, <trialname>_chosen, <trialname>_acc:
-rawData_wide = rawData_wide %>% 
-  # <trialname>_correct:
-  mutate(G2_correct = "left",
-         R3_correct = "right",
-         R2_correct = "right",
-         CrB_correct = "left",
-         R1_correct = "right", 
-         G1_correct = "left",
-         CrA_correct = "right",
-         R4_correct = "left") %>% 
-  # <trialname>_chosen:
-  mutate(G2_chosen  = ifelse(G2.PG_1=="On","left","right"),
-         R3_chosen  = ifelse(R3.GR_1=="On","left","right"),
-         R2_chosen  = ifelse(R2.BG_1=="On","left","right"),
-         CrB_chosen = ifelse(CrB.RB_1=="On","left","right"),
-         R1_chosen  = ifelse(R1.YB_1=="On","left","right"),
-         G1_chosen  = ifelse(G1.GY_1=="On","left","right"),
-         CrA_chosen = ifelse(CrA.BR_1=="On","left","right"),
-         R4_chosen  = ifelse(R4.PR_1=="On","left","right")) %>% 
-  # <trialname>_acc:
-  mutate(G2_acc = ifelse(G2_chosen==G2_correct, 1, 0),
-         R3_acc = ifelse(R3_chosen==R3_correct, 1, 0),
-         R2_acc = ifelse(R2_chosen==R2_correct, 1, 0),
-         CrB_acc = ifelse(CrB_chosen==CrB_correct, 1, 0),
-         R1_acc = ifelse(R1_chosen==R1_correct, 1, 0),
-         G1_acc = ifelse(G1_chosen==G1_correct, 1, 0),
-         CrA_acc = ifelse(CrA_chosen==CrA_correct, 1, 0),
-         R4_acc = ifelse(R4_chosen==R4_correct, 1, 0))
-  
-#(c) Additional tidying: 
-# (i) further clean up dataframe by selecting just newly created columns (+ subjectNum)
 cleanData_wide = rawData_wide %>% 
-  # (ii) convert subjectNum to factor
-  mutate(subjectNum = factor(subjectNum)) %>% 
-  #(iii) arrange columns in desired order
-  select(subjectNum,
-         contains("G2_"),
-         contains("R3_"), 
-         contains("R2_"),
-         contains("CrB_"),
-         contains("R1_"),
-         contains("G1_"),
-         contains("CrA_"),
-         contains("R4_"))
+  select(subjectNum,ends_with("_1")) %>% 
+  mutate(G2_correct = "left", R3_correct = "right",
+         R2_correct = "right", CrB_correct = "left",
+         R1_correct = "right", G1_correct = "left",
+         CrA_correct = "right", R4_correct = "left") %>%   
+  mutate(subjectNum = factor(subjectNum))  
+#replace '-' with '_', etc.
+  colnames(cleanData_wide) <- colnames(cleanData_wide) %>% 
+    str_replace("-", "_") %>% 
+    str_replace("_.._1","_chosen")
 
-# optional: save file at this stage, with newly computed columns # write.csv(cleanData_wide,file="SCIP-MT-study1a_acc-cleanData_wide.csv")
-
-```
-
-      (d) Converting to long form
-          (i) add new 'trialName' column with appropriate values 
-          (ii) reorder columns s.t. 'trialName' follows first column ('subjectNum')
-          (iii) make column names (<trialName>_correct/chosen/acc) uniform across trials 
-          (iv) combine dataframes for each trial into single long-form dataframe (longData_ALL)
-          
-
-```{r wide-to-long, eval=FALSE}
-
-## subsetting data associated with each trial 
-
-G2_data = cleanData_wide %>% 
-  select(subjectNum, contains("G2_")) %>%  
-  # add value "G2" under new column "trialName"
-  mutate(trialName = "G2") %>% 
-  # reordering columns
-  select(subjectNum, trialName, contains("G2_"))  
-  # rename columns to remove trialName-prefixes
-  colnames(G2_data)[3:5] <- c("correct","chosen","accuracy")
-
-R3_data = cleanData_wide %>% 
-select(subjectNum, contains("R3_")) %>%  
-  #add value "R3" under new column "trialName"
-  mutate(trialName = "R3")  %>% 
-  select(subjectNum, trialName, contains("R3_"))
-  # rename columns to remove trialName-prefixes
-  colnames(R3_data)[3:5] <- c("correct","chosen","accuracy")
-
-R2_data = cleanData_wide %>% 
-select(subjectNum, contains("R2_")) %>%  
-  #add value "R2" under new column "trialName"
-  mutate(trialName = "R2")  %>% 
-  # reordering columns
-  select(subjectNum, trialName, contains("R2_"))
-  # rename columns to remove trialName-prefixes
-  colnames(R2_data)[3:5] <- c("correct","chosen","accuracy")
-
-CrB_data = cleanData_wide %>% 
-select(subjectNum, contains("CrB_")) %>%  
-  # add value "CrB" under new column "trialName"
-  mutate(trialName = "CrB")  %>% 
-  # reordering columns
-  select(subjectNum, trialName, contains("CrB_"))
-# rename columns to remove trialName-prefixes
-  colnames(CrB_data)[3:5] <- c("correct","chosen","accuracy")
-
-R1_data = cleanData_wide %>% 
-select(subjectNum, contains("R1_")) %>%  
-  #add value "R1" under new column "trialName"
-  mutate(trialName = "R1")  %>% 
-  # reordering columns
-  select(subjectNum, trialName, contains("R1_"))
-  # rename columns to remove trialName-prefixes
-  colnames(R1_data)[3:5] <- c("correct","chosen","accuracy")
-
-G1_data = cleanData_wide %>% 
-  select(subjectNum, contains("G1_")) %>%  
-  #add value "G1" under new column "trialName"
-  mutate(trialName = "G1")  %>% 
-  # reordering columns
-  select(subjectNum, trialName, contains("G1_"))
-  # rename columns to remove trialName-prefixes
-  colnames(G1_data)[3:5] <- c("correct","chosen","accuracy")
-
-CrA_data = cleanData_wide %>% 
-select(subjectNum, contains("CrA_")) %>%  
-  #add value "CrA" under new column "trialName"
-  mutate(trialName = "CrA")  %>% 
-  # reordering columns
-  select(subjectNum, trialName, contains("CrA_"))
-  # rename columns to remove trialName-prefixes
-  colnames(CrA_data)[3:5] <- c("correct","chosen","accuracy")
-
-R4_data = cleanData_wide %>% 
-select(subjectNum, contains("R4_")) %>%  
-  #add value "R4" under new column "trialName"
-  mutate(trialName = "R4")  %>% 
-  # reordering columns
-  select(subjectNum, trialName, contains("R4_"))
-  # rename columns to remove trialName-prefixes
-  colnames(R4_data)[3:5] <- c("correct","chosen","accuracy")
-
-# combining these data frames
+  df.long <- cleanData_wide %>% 
+  gather(trial, value, -subjectNum) %>% 
+   arrange(subjectNum,trial) %>% 
+   separate(trial, into = c("trial", "variable")) %>% 
+   spread(variable, value) %>% 
+   mutate(chosen = ifelse(chosen =="On","left","right")) %>% 
+   mutate(acc = ifelse(chosen==correct,1,0)) %>% 
+   mutate(blockNum = ifelse(trial %in% c("G2","R3","R2","CrB"),1,2)) 
   
-# creating block1 (in two steps):
-firstTwo_block1 = rbind(G2_data,R3_data)
-nextTwo_block1 = rbind(R2_data, CrB_data)
-block1_data = rbind(firstTwo_block1, nextTwo_block1)
-# adding blockNum info:
-block1_data = block1_data %>% 
-  mutate(blockNum = 1)
-
-# creating block2:
-firstTwo_block2 = rbind(R1_data, G1_data)
-nextTwo_block2 = rbind(CrA_data, R4_data)
-block2_data = rbind(firstTwo_block2, nextTwo_block2)
-# adding blockNum info
-block2_data = block2_data %>% 
-  mutate(blockNum = 2)
-
-# combine two blocks into single dataframe:
-longData_ALL = rbind(block1_data,block2_data)
-
 # add trialType info (recap, crit, gen)
-# credit: Tobias Gerstenberg
-longData_ALL = longData_ALL %>% 
+  # credit: Tobias Gerstenberg
+longData = df.long %>% 
   mutate(trialType = "critical",
-         trialType = ifelse(str_detect(trialName, "G"), "gen", trialType),
-         trialType = ifelse(str_detect(trialName, "R"), "recap", trialType))
+         trialType = ifelse(str_detect(trial, "G"), "gen", trialType),
+         trialType = ifelse(str_detect(trial, "R"), "recap", trialType))
 
-# rearranging: moving trialType column next to trialName
-longData_ALL = longData_ALL %>% 
-  select(subjectNum,trialName,trialType, blockNum,everything())
-
-#making sure everything looks good:
-view(longData_ALL)
-
-# saving tidied up data in long form (finally!)
-write.csv(longData_ALL,file="SCIP-MT-study1a_acc-cleanData_long.csv")
+# saving tidied up data in long form:
+#write.csv(longData,file="SCIP-MT-study1a_acc-cleanData_long.csv")
 
 ```
 
 ALT code snippet from MCF: 
 
-```{r ALT-code, eval=FALSE}
+```{r MCF-code, eval=FALSE}
 d <- read_csv(here::here("SCIP_adult_study1a_acc-rawData.csv")) %>%
   mutate(G2_correct = "left",
          R3_correct = "right",
@@ -272,51 +121,16 @@ d <- read_csv(here::here("SCIP_adult_study1a_acc-rawData.csv")) %>%
 
 ```
 
-```{r ALT-ALT-code}
-df <- read_csv(here::here("SCIP_adult_study1a_acc-rawData.csv"))  %>% # 8 new cols added (total:1+16+8)
-  mutate(G2_correct = "left",
-         R3_correct = "right",
-         R2_correct = "right",
-         CrB_correct = "left",
-         R1_correct = "right", 
-         G1_correct = "left",
-         CrA_correct = "right",
-         R4_correct = "left")  %>%
-  select(-contains("_2"))  # drop _2 as that's the right side (total cols:1+8+8)
-  
-  
-dfg <- df %>%  
-  gather(variable, value, `G2-PG_1`:R4_correct) %>%  # puts cols 2:9 (On/Off "responses") in 'variable' col, 
-                                                     # next 8 (correct) in 'value' column
-    mutate(variable = str_replace(variable, "-", "_")) %>% # deal with naming issue
-    separate(variable, into = c("trial", "variable")) # splits values in 'variable' by '_'
-                                                      # So if variable[i] is originally "G3_PG", 
-                                                      # *new* trial[i] is "G3" and variable[i] is "PG" (!!)
-                                                            # Will splitting only work with underscores?
-
-  dfm <- dfg %>% # replaces jar-config codes in first half of 'variable' col ("PG", etc.) with "chosen"
-    mutate(variable = ifelse(variable == "correct", "correct", "chosen")) 
-  # Notes: this leaves "correct" vals in latter half of 'variable' col untouched 
-                  
-  
-  dfs <- dfm %>% 
-  spread(variable, value) %>%   # inverse of gather (how does it figure out *how* to spread specified data?) 
-  mutate(chosen = ifelse(chosen=="On", "left", "right")) %>% # mapping from "On"/"Off" --> "left"/"right"
-  #mutate(acc = chosen == correct) %>%                        # no parens??
-  mutate(acc = ifelse(chosen==correct,1,0)) %>% # would like to be able to count correct responses 
-  mutate(blockNum = ifelse(trial %in% c("G2","R3","R2","CrB"),1,2)) # adding block number (1,2)
-
-```
 
 # Plots 
 
-## Performance across 8 trials
+## (A) Performance across 8 trials
 
 - aggregating over participants with bootstrapped CIs
 
 ```{r visualization}
 
-ms <- dfs %>%
+ms <- longData %>%
   group_by(trial, subjectNum) %>%
   summarise(acc = mean(acc)) %>%
   multi_boot_standard(col = "acc") %>% 
@@ -333,7 +147,7 @@ ggplot(ms, aes(x = trial, y = mean, fill = colorindex)) +
   labs(fill = "Trial Type",
        x = "Trial",
        y = "Proportion Correct") + 
-  ylim(0,1) + 
+  ylim(0, 1) + 
   theme_classic() + 
   scale_fill_brewer(palette = "Set1") + 
   theme(text = element_text(size = 20))
@@ -343,12 +157,12 @@ ggplot(ms, aes(x = trial, y = mean, fill = colorindex)) +
 ```
  
  
-## Performance by trial type 
+## (B) Performance by trial type 
  
 - critical vs. generalization vs. recap
   
 ```{r}
- by_trial.type <- dfs %>% 
+ by_trial.type <- longData %>% 
   mutate(type = str_sub(trial, start = 1, end = 1)) %>% 
   group_by(type, subjectNum) %>% 
   summarise(acc = mean(acc)) %>%
@@ -375,12 +189,12 @@ ggplot(by_trial.type, aes(x = type, y = mean, fill = type)) +
   
 ```
   
-## Performance by block (aggregate)
+## (C) Performance by block (aggregate)
   
-  (c) Block 1 vs. Block 2
+  - Block 1 vs. Block 2
   
 ```{r}
-by_block <- dfs %>% 
+by_block <- longData %>% 
   group_by(blockNum,subjectNum) %>% 
   summarise(acc = mean(acc)) %>% 
   multi_boot_standard(col = "acc") %>% 
@@ -406,10 +220,10 @@ ggplot(by_block, aes(x = blockNum, y = mean)) +
 ```
   
   
-## performance by trial type, separated by block 
+## (D) Performance by trial type, separated by block 
   
 ```{r}
-by_type_block <- dfs %>% 
+by_type_block <- longData %>% 
   mutate(type = str_sub(trial, start = 1, end = 1)) %>% 
   group_by(blockNum,type,subjectNum) %>% 
   summarise(acc = mean(acc)) %>% 
@@ -447,28 +261,10 @@ plot(mean~blockNum, data = by_type_block, xlab = "block number", ylab = "mean ac
 
 ```
   
-## other (TBD)  
+## (E) Relationship between performance on recap (R1:R4) vs. critical trials
 
-```{r, eval=FALSE, include=FALSE, echo=FALSE}
-
-by_subject_type <- dfs %>% 
-  mutate(type = str_sub(trial, start = 1, end = 1)) %>% 
-  group_by(subjectNum, type) %>% 
-  summarise(acc = mean(acc)) %>% 
-  ungroup %>% 
-  mutate(type = factor(type, levels = c("C", "G", "R"),
-                             labels = c("critical", "gen", "recap")))
-
-
-plot(acc~type, data = by_subject_type)  # keep 
-
-```
-  
-  
-##relationship between performance on recap (R1:R4) vs. critical trials
-
-```{r}
-by_Cr_R <- dfs %>% 
+```{r, eval = FALSE}
+by_Cr_R <- longData %>% 
   mutate(type = str_sub(trial, start = 1, end = 1)) %>% 
   filter(type != "G") %>% 
   group_by(subjectNum, type) %>% 
@@ -484,16 +280,13 @@ cor(by_Cr_R)
   
 ```
 
-
-##relationship between performance on inner-recap (R2, R3) vs. critical trials
-
-```{r}
+## (F) Relationship between performance on inner-recap (R2, R3) vs. critical trials
+```{r, eval = FALSE}
 # df with critical and inner-recap trial acc per participant
-by_Cr_IR <- dfs %>% 
+by_Cr_IR <- longData %>% 
   mutate(type = str_sub(trial, start = 1, end = 1)) %>% 
-  filter(type != "G") %>% 
-  filter(trial != "R1") %>% 
-  filter(trial != "R4") %>%   # I'm sure I can be more efficient here :)
+  filter(trial = "R2") %>% 
+  filter(trial = "R3") %>%   # I'm sure I can be more efficient here :)
   group_by(subjectNum, type) %>% 
   summarise(acc = mean(acc)) %>% 
   ungroup %>% 
@@ -515,11 +308,31 @@ cor(by_Cr_IR)
 
 ```
 
+
+
+## (G) other (TBD)  
+
+```{r, eval=FALSE, include=FALSE, echo=FALSE}
+
+by_subject_type <- longData %>% 
+  mutate(type = str_sub(trial, start = 1, end = 1)) %>% 
+  group_by(subjectNum, type) %>% 
+  summarise(acc = mean(acc)) %>% 
+  ungroup %>% 
+  mutate(type = factor(type, levels = c("C", "G", "R"),
+                             labels = c("critical", "gen", "recap")))
+
+
+plot(acc~type, data = by_subject_type)  # keep 
+
+```
+
+
 # Analyses 
 
 ## Planned primary analysis:
 ```{r analysis-1}
-data <- dfs %>% 
+data <- longData %>% 
   mutate(type = str_sub(trial, start = 1, end = 1))  %>% 
   mutate(type = factor(type, levels = c("C", "G", "R"))) 
 
