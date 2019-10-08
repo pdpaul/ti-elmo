@@ -45,15 +45,44 @@ Steps in data processing pipeline:
 
 ```{r loadData}
 # STEP 1 #
-rawData_wide <- read_csv(here::here("SCIP_summer-pilot_data_ALL.csv"))
-head(rawData_wide)
+d_raw <- read_csv(here::here("SCIP_summer-pilot_data_ALL.csv"))
+head(d_raw)
 ```
 
-(2) processing
+(2) tidy data
 
 ```{r processing}
-df <- rawData_wide %>% 
-  select(-(prefam:tot_acc) %>% 
+df_full <- d_raw %>% 
+  mutate(subjectNum = factor(subjectNum)) %>% 
+  mutate(gender = factor(gender)) %>% 
+  mutate(ageGroup =ifelse(age < 4, 3, ifelse(age >= 5, 5, 4))) %>% 
+  mutate(ageGroup = factor(ageGroup)) %>%
+  mutate(trial = factor(trial)) %>% 
+  arrange(age,subjectNum) %>% 
+  gather(trial, accuracy, R1:CrB) %>% 
+  mutate(trialType = "critical",
+         trialType = ifelse(str_detect(trial, "G"), "gen", trialType),
+         trialType = ifelse(str_detect(trial, "R"), "recap", trialType))
+
+df_by_subj <- df %>% 
+  group_by(ageGroup,subjectNum) %>% 
+  summarise(acc = mean(accuracy)) 
+
+df_by_age <- df %>% 
+  group_by(ageGroup) %>% 
+  summarise(acc = mean(accuracy)) 
+  
+  
+
+
+d <- d_raw %>%
+  gather(trial, correct, starts_with("t")) %>%
+  mutate(trial_num = as.numeric(str_sub(trial, 2,3)), 
+         trial_type = case_when(
+           trial_num %in% c(1, 4, 6, 7) ~ "recap",
+           trial_num %in% c(2, 5) ~ "generalization",
+           trial_num %in% c(3, 8) ~ "critical"), 
+         block = ifelse(trial_num < 5, 1, 2))
  
 
 
