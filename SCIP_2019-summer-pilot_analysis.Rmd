@@ -47,6 +47,8 @@ Steps in data processing pipeline:
 # STEP 1 #
 d_raw <- read_csv(here::here("SCIP_summer-pilot_data_ALL.csv"))
 head(d_raw)
+
+colnames(d_raw)[14] <- "blockOrder"
 ```
 
 (2) tidy data
@@ -54,40 +56,208 @@ head(d_raw)
 ```{r processing}
 df_full <- d_raw %>% 
   mutate(subjectNum = factor(subjectNum)) %>% 
-  mutate(gender = factor(gender)) %>% 
-  mutate(ageGroup =ifelse(age < 4, 3, ifelse(age >= 5, 5, 4))) %>% 
+  mutate(ageGroup = ifelse(age < 4, 3, ifelse(age >= 5, 5, 4))) %>% 
   mutate(ageGroup = factor(ageGroup)) %>%
-  mutate(trial = factor(trial)) %>% 
-  arrange(age,subjectNum) %>% 
   gather(trial, accuracy, R1:CrB) %>% 
   mutate(trialType = "critical",
          trialType = ifelse(str_detect(trial, "G"), "gen", trialType),
-         trialType = ifelse(str_detect(trial, "R"), "recap", trialType))
+         trialType = ifelse(str_detect(trial, "R"), "recap", trialType)) %>% 
+  mutate(trialType = factor(trialType)) %>% 
+  select(subjectNum, age, ageGroup, gender, piggyback, prefam, blockOrder, trialType, trial, accuracy)  # reordering columns 
 
-df_by_subj <- df %>% 
-  group_by(ageGroup,subjectNum) %>% 
-  summarise(acc = mean(accuracy)) 
+df_short <- df_full %>% 
+  select(subjectNum, age, ageGroup, trialType, blockOrder, trial, accuracy) 
+
+df_noprefam <- df_full %>% 
+  filter(prefam=="N") %>% 
+  select(subjectNum, age, ageGroup, trialType, blockOrder, trial, accuracy) 
+
+df_prefam <- df_full %>% 
+  filter(prefam=="Y") %>% 
+  select(subjectNum, age, ageGroup, trialType, blockOrder, trial, accuracy) 
+
+df_order1 <- df_full %>% 
+  filter(blockOrder==1) %>% 
+  select(subjectNum, age, ageGroup, trialType, blockOrder, trial, accuracy) 
+
+df_order2 <- df_full %>% 
+  filter(blockOrder==2) %>% 
+  select(subjectNum, age, ageGroup, trialType, blockOrder, trial, accuracy) 
+
+  #arrange(subjectNum, trial) %>% 
+  #group_by(ageGroup) %>% # (1) overall accuracy by age group
+  #group_by(subjectNum) %>%  # (2) overall accuracy per participant 
+  #group_by(trialType, trial) %>%  # (3) overall accuracy by trial type 
+  #group_by(ageGroup, trialType) %>% # (4) accuracy (by trial type) per age group
+  #group_by(trial) %>% # (5)
+  summarise(acc = mean(accuracy)) %>% 
+  multi_boot_standard(col = "acc") 
+
+ 
+  # group_by(ageGroup,subjectNum) %>% 
+  # summarise(acc = mean(accuracy)) 
 
 df_by_age <- df %>% 
   group_by(ageGroup) %>% 
   summarise(acc = mean(accuracy)) 
-  
-  
-
-
-d <- d_raw %>%
-  gather(trial, correct, starts_with("t")) %>%
-  mutate(trial_num = as.numeric(str_sub(trial, 2,3)), 
-         trial_type = case_when(
-           trial_num %in% c(1, 4, 6, 7) ~ "recap",
-           trial_num %in% c(2, 5) ~ "generalization",
-           trial_num %in% c(3, 8) ~ "critical"), 
-         block = ifelse(trial_num < 5, 1, 2))
- 
 
 
 ```
 
 
+# Plots 
 
+
+
+```{r plots}
+
+# d <- df_full 
+# d <- df_short    # plots work with this as is
+# d <- df_noprefam 
+d <- df_prefam
+# d <- df_order1
+# d <- df_order2
+  
+
+#ggplot(data = d) +
+ # geom_histogram(mapping = aes(x = age, y = , binwidth = 0.5)
+```
+
+## (1) Plot 1
+
+```{r plot1}
+by_trial <- d %>% 
+  group_by(trial, subjectNum) %>% 
+  summarise(acc = mean(accuracy))%>%
+  multi_boot_standard(col = "acc") %>% 
+  mutate(colorindex = str_sub(trial, end = -2), #??
+         colorindex = factor(colorindex,
+                             levels = c("Cr", "G", "R"),
+                             labels = c("critical", "generalization", "recap")))
+
+ggplot(by_trial, aes(x = trial, y = mean, fill = colorindex)) + 
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper),
+                  shape = 21,  # fillable circles 
+                  size = 1) + 
+  geom_hline(yintercept = .5, lty = 2) +
+  labs(fill = "Trial Type",
+       x = "Trial",
+       y = "Proportion Correct") + 
+  ylim(0, 1) + 
+  theme_classic() + 
+  scale_fill_brewer(palette = "Set1") + 
+  theme(text = element_text(size = 20))
+
+```
+
+## (2) Plot 2
+
+```{r plot2}
+
+by_trial_age <- d %>% 
+  group_by(trial, ageGroup, subjectNum) %>% 
+  summarise(acc = mean(accuracy))%>%
+  multi_boot_standard(col = "acc") %>% 
+  mutate(colorindex = str_sub(trial, end = -2), #??
+         colorindex = factor(colorindex,
+                             levels = c("Cr", "G", "R"),
+                             labels = c("critical", "generalization", "recap")))
+
+ggplot(by_trial_age, aes(x = trial, y = mean, fill = colorindex)) + 
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper),
+                  shape = 21,  # fillable circles 
+                  size = 1) + 
+  geom_hline(yintercept = .5, lty = 2) +
+  labs(fill = "Trial Type",
+       x = "Trial",
+       y = "Proportion Correct") + 
+  ylim(0, 1) + 
+  theme_classic() + 
+  scale_fill_brewer(palette = "Set1") + 
+  theme(text = element_text(size = 20))
+
+# ageGroup 3 
+by_trial_age3 <- d %>% 
+  filter(ageGroup==3) %>% 
+  group_by(trial, subjectNum) %>% 
+  summarise(acc = mean(accuracy))%>%
+  multi_boot_standard(col = "acc") %>% 
+  mutate(colorindex = str_sub(trial, end = -2), #??
+         colorindex = factor(colorindex,
+                             levels = c("Cr", "G", "R"),
+                             labels = c("critical", "generalization", "recap")))
+
+ggplot(by_trial_age3, aes(x = trial, y = mean, fill = colorindex)) + 
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper),
+                  shape = 21,  # fillable circles 
+                  size = 1) + 
+  geom_hline(yintercept = .5, lty = 2) +
+  labs(fill = "Trial Type",
+       x = "Trial",
+       y = "Proportion Correct") + 
+  ylim(0, 1) + 
+  theme_classic() + 
+  scale_fill_brewer(palette = "Set1") + 
+  theme(text = element_text(size = 20))
+
+# ageGroup 4
+by_trial_age4 <- d %>% 
+  filter(ageGroup==4) %>% 
+  group_by(trial, subjectNum) %>% 
+  summarise(acc = mean(accuracy))%>%
+  multi_boot_standard(col = "acc") %>% 
+  mutate(colorindex = str_sub(trial, end = -2), #??
+         colorindex = factor(colorindex,
+                             levels = c("Cr", "G", "R"),
+                             labels = c("critical", "generalization", "recap")))
+
+ggplot(by_trial_age4, aes(x = trial, y = mean, fill = colorindex), main = "acc by trial (age group 3)") + 
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper),
+                  shape = 21,  # fillable circles 
+                  size = 1) + 
+  geom_hline(yintercept = .5, lty = 2) +
+  labs(fill = "Trial Type",
+       x = "Trial",
+       y = "Proportion Correct") + 
+  ylim(0, 1) + 
+  theme_classic() + 
+  scale_fill_brewer(palette = "Set1") + 
+  theme(text = element_text(size = 20))
+
+# ageGroup 5
+by_trial_age5 <- d %>% 
+  filter(ageGroup==5) %>% 
+  group_by(trial, subjectNum) %>% 
+  summarise(acc = mean(accuracy))%>%
+  multi_boot_standard(col = "acc") %>% 
+  mutate(colorindex = str_sub(trial, end = -2), #??
+         colorindex = factor(colorindex,
+                             levels = c("Cr", "G", "R"),
+                             labels = c("critical", "generalization", "recap")))
+
+ggplot(by_trial_age5, aes(x = trial, y = mean, fill = colorindex), main = "acc by trial (age group 3)") + 
+  geom_pointrange(aes(ymin = ci_lower, ymax = ci_upper),
+                  shape = 21,  # fillable circles 
+                  size = 1) + 
+  geom_hline(yintercept = .5, lty = 2) +
+  labs(fill = "Trial Type",
+       x = "Trial",
+       y = "Proportion Correct") + 
+  ylim(0, 1) + 
+  theme_classic() + 
+  scale_fill_brewer(palette = "Set1") + 
+  theme(text = element_text(size = 20))
+
+
+
+```
+
+## (3) Plot 3
+
+```{r plot3}
+
+```
+
+
+# Analyses 
 
