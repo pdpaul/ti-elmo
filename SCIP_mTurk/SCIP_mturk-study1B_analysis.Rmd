@@ -70,6 +70,7 @@ d <- tibble(fname = files) %>%
       mutate(trialType = "critical",
          trialType = ifelse(str_detect(trialName, "G"), "gen", trialType),
          trialType = ifelse(str_detect(trialName, "R"), "recap", trialType)) %>%
+      
       mutate(trialName = str_replace(trialName, ":purple",""),
              jars = str_replace(str_replace(jars, "_1", ""), "white", "PW"),          
              list = as.numeric(str_replace(str_replace(
@@ -79,7 +80,8 @@ d <- tibble(fname = files) %>%
              id = str_replace(str_replace(
                str_replace(id, "SCIP_1B_List-", ""), 
                                 "_ANdata.csv", ""),
-                              "SCIP_1Bb_List-", "")) }) 
+                              "SCIP_1Bb_List-", "")) })
+  
 
     # Still TODO:
       # (d) add leftJar/rightJar columns using jars values
@@ -99,23 +101,42 @@ keys <- read_csv("SCIP_1B_key.csv") %>%
   rename(list = listNum) %>%
   pivot_longer(names_to = "trialName", values_to = "correctSide", G2:R4)
   
-
+#TODO: missing some Cr 'correctSide' values in later lists --- fix 
 d <- left_join(d, keys) %>%
-  mutate(correct = response == correctSide)
+  mutate(acc = ifelse(response==correctSide,1,0))
+
+
 ```
 
 Aggregate and plot. 
 
 ```{r Full}
-ms <- d %>%
+#grouping by trial type (Critical/Generalization/Recap)
+ms <- d %>%   
   group_by(trialType, id) %>%
-  summarise(correct = mean(correct, na.rm=TRUE)) %>%
-  multi_boot_standard(col = "correct", na.rm = TRUE)
-
+  summarise(acc = mean(acc, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "acc", na.rm = TRUE)
 ggplot(ms, aes(x = trialType, y = mean, fill = trialType)) + 
   geom_bar(stat = "identity") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
   geom_hline(yintercept = .5, lty = 3)
+
+
+#grouping by trial name (n = 8)
+ms <- d %>%   
+  group_by(trialName, id) %>%
+  summarise(acc = mean(acc, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "acc", na.rm = TRUE)
+ggplot(ms, aes(x = trialName, y = mean, fill = trialName)) + 
+  geom_bar(stat = "identity") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  geom_hline(yintercept = .5, lty = 3)
+
+#TODO: fix labeling issue with 'Cr' trials
+#TODO: use faceting to separate into groups by familiarization order 
+          # INCREASING = odd numbered lists
+          # DECREASING = even numbered lists
+
 ```
 ```{r byFamOrder}
 increasing <- d %>%
