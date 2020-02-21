@@ -1,0 +1,131 @@
+---
+title: "SCIP_mturk-study1B_analysis"
+author: "Pooja Paul"
+date: "12/9/2019"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+---
+
+```{r opts, include=FALSE, echo = FALSE, cache = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# edited line below to help with saving plots as .png files; 
+# knitr::opts_chunk$set(echo = TRUE, dev = c('png', 'pdf'),fig.align = 'center') 
+   
+
+```
+# Load packages
+
+```{r loadPackages, message=FALSE, warning=FALSE}
+
+library(here)
+library(langcog)   #install.packages("devtools"); devtools::install_github("langcog/langcog")
+library(Hmisc) # --- could use this for alt. bootstrapping fns
+
+# added 9-27-19 - I
+library(stringr) #processing strings
+library(compute.es) #for calculating effect sizes
+library(lme4) 
+#library(regex) 
+
+#added 9-27-19 - II
+# install.packages(c("skimr", "visdat", "summarytools", "DT"))
+library(skimr)
+library(visdat)
+# library(summarytools)  # must have XQuartz installed 
+# getting following error: package ‘summarytools’ was built under R version 3.5.2 couldn't connect to display ":0"system has no X11 capabilities, therefore only ascii graphs will be produced by dfSummary()
+library(DT)
+library(tidyverse)  #note: contains ggplot2, dplyr, tidyr
+library(car)
+library(lme4)
+
+```
+
+# Structure data
+
+Steps in data processing pipeline:
+
+(1) Load csv file containing raw ON/OFF data (Qualtrics 'Hot Spots' Question type) 
+    -- Note: no timing info included in this datafile.
+
+```{r tidyUp}
+files <- dir(here("SCIP_1B_data_ANON"), "*.csv")
+
+d <- tibble(fname = files) %>%
+  mutate(id = c(1,10,11,12,2,3,4,9,13,14,15,16,5,6,7,8)) %>% # adds index to keep track of data frames
+  arrange(id) %>% 
+  split(.$id) %>% # splits into list of data frames (but not in right list order)
+  map_df(function (x) {  # defines function to run on each data frame
+    read_csv(here("SCIP_1B_data_ANON", x$fname)) %>%
+      select(ends_with("_1"), -contains("timing")) %>% 
+      mutate(list = x$fname) %>%
+      mutate(id = str_c(list,"-",as.character(1:n()))) %>%
+      pivot_longer(names_to = "trial", 
+                   values_to = "response", cols = c(-list, -id)) %>%
+      separate(trial, sep = "-", into = c("trialName", "jars")) %>% 
+      mutate(response = ifelse(response=="On", 
+                               "left",ifelse(response=="Off","right","NA"))) %>% 
+      mutate(trialType = "critical",
+         trialType = ifelse(str_detect(trialName, "G"), "gen", trialType),
+         trialType = ifelse(str_detect(trialName, "R"), "recap", trialType)) %>%
+      mutate(trialName = str_replace(trialName, ":purple",""),
+             jars = str_replace(str_replace(jars, "_1", ""), "white", "PW"),          
+             list = as.numeric(str_replace(str_replace(
+               str_replace(list,"SCIP_1B_List-", ""), 
+                                "_ANdata.csv", ""),
+                               "SCIP_1Bb_List-", "")),
+             id = str_replace(str_replace(
+               str_replace(id, "SCIP_1B_List-", ""), 
+                                "_ANdata.csv", ""),
+                              "SCIP_1Bb_List-", "")) }) 
+
+    # Still TODO:
+      # (d) add leftJar/rightJar columns using jars values
+```
+
+
+creating appropriate subsets for plotting: 
+```{r subsets}
+
+```
+
+
+
+Merge in key information and score trials
+```{r}
+keys <- read_csv("SCIP_1B_key.csv") %>%
+  rename(list = listNum) %>%
+  pivot_longer(names_to = "trialName", values_to = "correctSide", G2:R4)
+  
+
+d <- left_join(d, keys) %>%
+  mutate(correct = response == correctSide)
+```
+
+Aggregate and plot. 
+
+```{r Full}
+ms <- d %>%
+  group_by(trialType, id) %>%
+  summarise(correct = mean(correct, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "correct", na.rm = TRUE)
+
+ggplot(ms, aes(x = trialType, y = mean, fill = trialType)) + 
+  geom_bar(stat = "identity") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  geom_hline(yintercept = .5, lty = 3)
+```
+```{r byFamOrder}
+increasing <- d %>%
+  select()
+  group_by(trialType, id) %>%
+  summarise(correct = mean(correct, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "correct", na.rm = TRUE)
+
+ggplot(ms, aes(x = trialType, y = mean, fill = trialType)) + 
+  geom_bar(stat = "identity") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  geom_hline(yintercept = .5, lty = 3)
+```

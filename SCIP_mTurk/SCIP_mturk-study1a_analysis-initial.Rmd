@@ -263,8 +263,7 @@ plot(mean~blockNum, data = by_type_block, xlab = "block number", ylab = "mean ac
   
 ## (E) Relationship between performance on recap (R1:R4) vs. critical trials
 
-```{r corr}
-
+```{r, eval = FALSE}
 by_Cr_R <- longData %>% 
   mutate(type = str_sub(trial, start = 1, end = 1)) %>% 
   filter(type != "G") %>% 
@@ -282,12 +281,12 @@ cor(by_Cr_R)
 ```
 
 ## (F) Relationship between performance on inner-recap (R2, R3) vs. critical trials
-```{r corr-Inner}
+```{r, eval = FALSE}
 # df with critical and inner-recap trial acc per participant
 by_Cr_IR <- longData %>% 
   mutate(type = str_sub(trial, start = 1, end = 1)) %>% 
-  filter(trial == "R2") %>% 
-  filter(trial == "R3") %>%   # I'm sure I can be more efficient here :)
+  filter(trial = "R2") %>% 
+  filter(trial = "R3") %>%   # I'm sure I can be more efficient here :)
   group_by(subjectNum, type) %>% 
   summarise(acc = mean(acc)) %>% 
   ungroup %>% 
