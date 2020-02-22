@@ -88,13 +88,6 @@ d <- tibble(fname = files) %>%
 ```
 
 
-creating appropriate subsets for plotting: 
-```{r subsets}
-
-```
-
-
-
 Merge in key information and score trials
 ```{r}
 keys <- read_csv("SCIP_1B_key.csv") %>%
