@@ -103,7 +103,7 @@ d <- left_join(d, keys) %>%
 
 Aggregate and plot. 
 
-```{r Full}
+```{r fullData}
 #grouping by trial type (Critical/Generalization/Recap)
 ms <- d %>%   
   group_by(trialType, id) %>%
@@ -125,6 +125,9 @@ ggplot(ms, aes(x = trialName, y = mean, fill = trialName)) +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
   geom_hline(yintercept = .5, lty = 3)
 
+
+
+
 #TODO: fix labeling issue with 'Cr' trials
 #TODO: use faceting to separate into groups by familiarization order 
           # INCREASING = odd numbered lists
@@ -132,13 +135,28 @@ ggplot(ms, aes(x = trialName, y = mean, fill = trialName)) +
 
 ```
 ```{r byFamOrder}
-increasing <- d %>%
-  select()
-  group_by(trialType, id) %>%
-  summarise(correct = mean(correct, na.rm=TRUE)) %>%
-  multi_boot_standard(col = "correct", na.rm = TRUE)
+# df with just INCREASING fam order (odd-numbered lists)
+ms_increasing <- d %>% 
+  filter(list == c(1,3,5,7,9,11,13,15)) %>% 
+  #group_by(trialType, id) %>%
+  group_by(trialName, id) %>%
+  summarise(acc = mean(acc, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "acc", na.rm = TRUE)
+#ggplot(ms_increasing, aes(x = trialType, y = mean, fill = trialType)) + 
+ggplot(ms_increasing, aes(x = trialName, y = mean, fill = trialName)) + 
+  geom_bar(stat = "identity") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  geom_hline(yintercept = .5, lty = 3)
 
-ggplot(ms, aes(x = trialType, y = mean, fill = trialType)) + 
+# df with just DECREASING fam order (even-numbered lists)
+ms_decreasing <- d %>% 
+  filter(list == c(2,4,6,8,10,12,14,16)) %>% 
+  #group_by(trialType, id) %>%
+  group_by(trialName, id) %>%
+  summarise(acc = mean(acc, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "acc", na.rm = TRUE)
+#ggplot(ms_decreasing, aes(x = trialType, y = mean, fill = trialType)) + 
+ggplot(ms_decreasing, aes(x = trialName, y = mean, fill = trialName)) +  
   geom_bar(stat = "identity") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
   geom_hline(yintercept = .5, lty = 3)
