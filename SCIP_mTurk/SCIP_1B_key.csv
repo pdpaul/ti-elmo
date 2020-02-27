@@ -1,17 +1,53 @@
-listNum,G2,R3,R1,CrB,R2,G1,CrA,R4
-1,left,right,right,left ,right,left,right,left 
-2,left,right,right,left ,right,left,right,left 
-3,right,left,right,left ,left,right,right,left 
-4,right,left,right,left ,left,right,right,left 
-5,left,right,right,left ,right,left,right,left 
-6,left,right,right,left ,right,left,right,left 
-7,right,left,right,left ,left,right,right,left 
-8,right,left,right,left ,left,right,right,left 
-9,right,left,left,right,left,right,left,right
-10,right,left,left,right,left,right,left,right
-11,left,right,left,right,right,left,left,right
-12,left,right,left,right,right,left,left,right
-13,right,left,left,right,left,right,left,right
-14,right,left,left,right,left,right,left,right
-15,left,right,left,right,right,left,left,right
-16,left,right,left,right,right,left,left,right
+1,G2,NA,R3,NA,R1,right,CrB,left ,R2,right,G1,left,CrA,right,R4,left 
+2,G2,left,R3,right,R1,right,CrB,left ,R2,right,G1,left,CrA,right,R4,left 
+3,R2,right,G1,left,CrA,right,R4,left ,G2,left,R3,right,R1,right,CrB,left 
+4,R2,right,G1,left,CrA,right,R4,left ,G2,left,R3,right,R1,right,CrB,left 
+5,G2,left,R3,right,R1,right,CrB,left ,R2,right,G1,left,CrA,right,R4,left 
+6,G2,left,R3,right,R1,right,CrB,left ,R2,right,G1,left,CrA,right,R4,left 
+7,R2,right,G1,left,CrA,right,R4,left ,G2,left,R3,right,R1,right,CrB,left 
+8,R2,right,G1,left,CrA,right,R4,left ,G2,left,R3,right,R1,right,CrB,left 
+9,G2,right,R3,left ,R1,left,CrA,right,R2,left,G1,right,CrB,left,R4,right
+10,G2,right,R3,left ,R1,left,CrA,right,R2,left,G1,right,CrB,left,R4,right
+11,R2,left,G1,right,CrB,left,R4,right,G2,right,R3,left,R1,left,CrA,right
+12,R2,left,G1,right,CrB,left,R4,right,G2,right,R3,left,R1,left,CrA,right
+13,G2,right,R3,left ,R1,left,CrA,right,R2,left,G1,right,CrB,left,R4,right
+14,G2,right,R3,left ,R1,left,CrA,right,R2,left,G1,right,CrB,left,R4,right
+15,R2,left,G1,right,CrB,left,R4,right,G2,right,R3,left,R1,left,CrA,right
+16,R2,left,G1,right,CrB,left,R4,right,G2,right,R3,left,R1,left,CrA,right
+,,,,,,,,,,,,,,,,
+listNum,G2,R3,R1,CrB,R2,G1,CrA,R4,,,,,,,,
+1,NA,NA,right,left ,right,left,right,left ,,,,,,,,
+2,left,right,right,left ,right,left,right,left ,,,,,,,,
+3,right,left,right,left ,left,right,right,left ,,,,,,,,
+4,right,left,right,left ,left,right,right,left ,,,,,,,,
+5,left,right,right,left ,right,left,right,left ,,,,,,,,
+6,left,right,right,left ,right,left,right,left ,,,,,,,,
+7,right,left,right,left ,left,right,right,left ,,,,,,,,
+8,right,left,right,left ,left,right,right,left ,,,,,,,,
+9,right,left,left,right,left,right,left,right,,,,,,,,
+10,right,left,left,right,left,right,left,right,,,,,,,,
+11,left,right,left,right,right,left,left,right,,,,,,,,
+12,left,right,left,right,right,left,left,right,,,,,,,,
+13,right,left,left,right,left,right,left,right,,,,,,,,
+14,right,left,left,right,left,right,left,right,,,,,,,,
+15,left,right,left,right,right,left,left,right,,,,,,,,
+16,left,right,left,right,right,left,left,right,,,,,,,,
+,,,,,,,,,,,,,,,,
+,G2,R3,R1,CrB,R2,G1,CrA,R4,,,,,,,,
+1,NA,NA,right,left ,right,left,right,left ,,,,,,,,
+2,left,right,right,left ,right,left,right,left ,,,,,,,,
+3,left,right,right,left ,right,left,right,left ,,,,,,,,
+4,left,right,right,left ,right,left,right,left ,,,,,,,,
+5,left,right,right,left ,right,left,right,left ,,,,,,,,
+6,left,right,right,left ,right,left,right,left ,,,,,,,,
+7,left,right,right,left ,right,left,right,left ,,,,,,,,
+8,left,right,right,left ,right,left,right,left ,,,,,,,,
+,G2,R3,R1,CrA,R2,G1,CrB,R4,,,,,,,,
+9,right,left ,left,right,left,right,left,right,,,,,,,,
+10,right,left ,left,right,left,right,left,right,,,,,,,,
+11,right,left,left,right,left,right,left,right,,,,,,,,
+12,right,left,left,right,left,right,left,right,,,,,,,,
+13,right,left ,left,right,left,right,left,right,,,,,,,,
+14,right,left ,left,right,left,right,left,right,,,,,,,,
+15,right,left,left,right,left,right,left,right,,,,,,,,
+16,right,left,left,right,left,right,left,right,,,,,,,,
