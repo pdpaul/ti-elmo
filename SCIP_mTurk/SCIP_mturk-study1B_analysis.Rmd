@@ -52,39 +52,27 @@ Steps in data processing pipeline:
 
 ```{r tidyUp, echo = FALSE, message=FALSE, warning=FALSE}
 files <- dir(here("SCIP_1B_data_ANON"), "*.csv")
-
 d <- tibble(fname = files) %>%
   mutate(id = c(1,10,11,12,2,3,4,9,13,14,15,16,5,6,7,8)) %>% # adds index to keep track of data frames
   arrange(id) %>% # arranges in ascending list order
   select(id, fname) %>% 
   split(.$id) %>% # splits into list of data frames
   map_df(function (x) {  # defines function to run on each data frame
-    read_csv(here("SCIP_1B_data_ANON", x$fname)) %>% #need to go up two directories to access this?
-      select(ends_with("_1"), -contains("timing")) })
-    
-    %>% 
-      mutate(list = x$id) %>%
-      #mutate(listNum = str_c(list,"-",as.character(1:n()))) %>%
-      pivot_longer(names_to = "trial", 
-                   values_to = "response", cols = c(-list, -id)) %>%
-      separate(trial, sep = "-", into = c("trialName", "jars")) %>% 
-      mutate(response = ifelse(response=="On", 
-                               "left",ifelse(response=="Off","right","NA"))) %>% 
-      mutate(trialType = "critical",
+    read_csv(here("SCIP_1B_data_ANON", x$fname)) %>% 
+      select(ends_with("_1"), -contains("timing")) %>% 
+      mutate(listNum = x$id, 
+             subid = str_c(as.character(listNum), '-', as.character(1:n()))) %>%
+  pivot_longer(names_to = "trial", 
+               values_to = "response", cols = c(-listNum, -subid)) %>%
+  separate(trial, sep = "-", into = c("trialName", "jars")) %>% 
+  mutate(response = ifelse(response=="On", 
+                           "left",ifelse(response=="Off","right","NA"))) %>% 
+  mutate(trialType = "critical",
          trialType = ifelse(str_detect(trialName, "G"), "gen", trialType),
          trialType = ifelse(str_detect(trialName, "R"), "recap", trialType)) %>%
-  
-      mutate(trialName = str_replace(trialName, ":purple",""),
-             jars = str_replace(str_replace(jars, "_1", ""), "white", "PW"),          
-             list = as.numeric(str_replace(str_replace(
-               str_replace(list,"SCIP_1B_List-", ""), 
-                                "_ANdata.csv", ""),
-                               "SCIP_1Bb_List-", "")),
-             id = str_replace(str_replace(
-               str_replace(id, "SCIP_1B_List-", ""), 
-                                "_ANdata.csv", ""),
-                              "SCIP_1Bb_List-", "")) })
-  
+  mutate(trialName = str_replace(trialName, ":purple",""),
+         jars = str_replace(str_replace(jars, "_1", ""), "white", "PW")) })
+
 
     # Still TODO:
       # (d) fix Cr naming issue in lists 9-16
@@ -92,11 +80,9 @@ d <- tibble(fname = files) %>%
 
 
 Merge in key information and score trials
-```{r}
-keys <- read_csv("SCIP_1B_key.csv") %>%
-  rename(list = listNum) %>%
-  pivot_longer(names_to = "trialName", values_to = "correctSide", G2:R4)
-  
+```{r echo = FALSE, message=FALSE, warning=FALSE}
+keys <- read_csv("SCIP_1B_key_full.csv") 
+
 #TODO: missing some Cr 'correctSide' values in later lists --- fix 
 d <- left_join(d, keys) %>%
   mutate(acc = ifelse(response==correctSide,1,0))
@@ -109,7 +95,7 @@ Aggregate and plot.
 ```{r fullData}
 #grouping by trial type (Critical/Generalization/Recap)
 ms <- d %>%   
-  group_by(trialType, id) %>%
+  group_by(trialType, subid) %>%
   summarise(acc = mean(acc, na.rm=TRUE)) %>%
   multi_boot_standard(col = "acc", na.rm = TRUE)
 ggplot(ms, aes(x = trialType, y = mean, fill = trialType)) + 
@@ -120,7 +106,7 @@ ggplot(ms, aes(x = trialType, y = mean, fill = trialType)) +
 
 #grouping by trial name (n = 8)
 ms <- d %>%   
-  group_by(trialName, id) %>%
+  group_by(trialName, subid) %>%
   summarise(acc = mean(acc, na.rm=TRUE)) %>%
   multi_boot_standard(col = "acc", na.rm = TRUE)
 ggplot(ms, aes(x = trialName, y = mean, fill = trialName)) + 
@@ -140,9 +126,9 @@ ggplot(ms, aes(x = trialName, y = mean, fill = trialName)) +
 ```{r byFamOrder}
 # df with just INCREASING fam order (odd-numbered lists)
 ms_increasing <- d %>% 
-  filter(list == c(1,3,5,7,9,11,13,15)) %>% 
+  filter(listNum %in% c(1,3,5,7,9,11,13,15)) %>% 
   #group_by(trialType, id) %>%
-  group_by(trialName, id) %>%
+  group_by(trialName, subid) %>%
   summarise(acc = mean(acc, na.rm=TRUE)) %>%
   multi_boot_standard(col = "acc", na.rm = TRUE)
 #ggplot(ms_increasing, aes(x = trialType, y = mean, fill = trialType)) + 
@@ -153,39 +139,13 @@ ggplot(ms_increasing, aes(x = trialName, y = mean, fill = trialName)) +
 
 # df with just DECREASING fam order (even-numbered lists)
 ms_decreasing <- d %>% 
-  filter(list == c(2,4,6,8,10,12,14,16)) %>% 
+  filter(listNum %in% c(2,4,6,8,10,12,14,16)) %>% 
   #group_by(trialType, id) %>%
-  group_by(trialName, id) %>%
+  group_by(trialName, subid) %>%
   summarise(acc = mean(acc, na.rm=TRUE)) %>%
   multi_boot_standard(col = "acc", na.rm = TRUE)
 #ggplot(ms_decreasing, aes(x = trialType, y = mean, fill = trialType)) + 
 ggplot(ms_decreasing, aes(x = trialName, y = mean, fill = trialName)) +  
-  geom_bar(stat = "identity") +
-  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
-  geom_hline(yintercept = .5, lty = 3)
-```
-```{r byColorMapping}
-# df with just INCREASING fam order (odd-numbered lists)
-ms <- d %>% 
-  filter(list = c(1,2,3,4,9,10,11,12) %>% 
-  #group_by(trialType, id) %>%
-  group_by(trialName, id) %>%
-  summarise(acc = mean(acc, na.rm=TRUE)) %>%
-  multi_boot_standard(col = "acc", na.rm = TRUE)
-ggplot(ms, aes(x = trialName, y = mean, fill = trialName)) +
-  geom_bar(stat = "identity") +
-  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
-  geom_hline(yintercept = .5, lty = 3)
-
-# df with just DECREASING fam order (even-numbered lists)
-ms_colorB <- d %>% 
-  filter(list == c(5,6,7,8,13,14,15,16)) %>% 
-  #group_by(trialType, id) %>%
-  group_by(trialName, id) %>%
-  summarise(acc = mean(acc, na.rm=TRUE)) %>%
-  multi_boot_standard(col = "acc", na.rm = TRUE)
-#ggplot(ms_decreasing, aes(x = trialType, y = mean, fill = trialType)) + 
-ggplot(ms_colorB, aes(x = trialName, y = mean, fill = trialName)) +  
   geom_bar(stat = "identity") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
   geom_hline(yintercept = .5, lty = 3)
