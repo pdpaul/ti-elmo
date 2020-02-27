@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 # Load packages
 
-```{r loadPackages, message=FALSE, warning=FALSE}
+```{r loadPackages, echo = FALSE, message=FALSE, warning=FALSE}
 
 library(here)
 library(langcog)   #install.packages("devtools"); devtools::install_github("langcog/langcog")
@@ -50,18 +50,21 @@ Steps in data processing pipeline:
 (1) Load csv file containing raw ON/OFF data (Qualtrics 'Hot Spots' Question type) 
     -- Note: no timing info included in this datafile.
 
-```{r tidyUp}
+```{r tidyUp, echo = FALSE, message=FALSE, warning=FALSE}
 files <- dir(here("SCIP_1B_data_ANON"), "*.csv")
 
 d <- tibble(fname = files) %>%
   mutate(id = c(1,10,11,12,2,3,4,9,13,14,15,16,5,6,7,8)) %>% # adds index to keep track of data frames
-  arrange(id) %>% 
-  split(.$id) %>% # splits into list of data frames (but not in right list order)
+  arrange(id) %>% # arranges in ascending list order
+  select(id, fname) %>% 
+  split(.$id) %>% # splits into list of data frames
   map_df(function (x) {  # defines function to run on each data frame
-    read_csv(here("SCIP_1B_data_ANON", x$fname)) %>%
-      select(ends_with("_1"), -contains("timing")) %>% 
-      mutate(list = x$fname) %>%
-      mutate(id = str_c(list,"-",as.character(1:n()))) %>%
+    read_csv(here("SCIP_1B_data_ANON", x$fname)) %>% #need to go up two directories to access this?
+      select(ends_with("_1"), -contains("timing")) })
+    
+    %>% 
+      mutate(list = x$id) %>%
+      #mutate(listNum = str_c(list,"-",as.character(1:n()))) %>%
       pivot_longer(names_to = "trial", 
                    values_to = "response", cols = c(-list, -id)) %>%
       separate(trial, sep = "-", into = c("trialName", "jars")) %>% 
@@ -70,7 +73,7 @@ d <- tibble(fname = files) %>%
       mutate(trialType = "critical",
          trialType = ifelse(str_detect(trialName, "G"), "gen", trialType),
          trialType = ifelse(str_detect(trialName, "R"), "recap", trialType)) %>%
-      
+  
       mutate(trialName = str_replace(trialName, ":purple",""),
              jars = str_replace(str_replace(jars, "_1", ""), "white", "PW"),          
              list = as.numeric(str_replace(str_replace(
@@ -84,7 +87,7 @@ d <- tibble(fname = files) %>%
   
 
     # Still TODO:
-      # (d) add leftJar/rightJar columns using jars values
+      # (d) fix Cr naming issue in lists 9-16
 ```
 
 
