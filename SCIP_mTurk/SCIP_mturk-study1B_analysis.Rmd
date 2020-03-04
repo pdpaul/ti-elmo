@@ -73,9 +73,6 @@ d <- tibble(fname = files) %>%
   mutate(trialName = str_replace(trialName, ":purple",""),
          jars = str_replace(str_replace(jars, "_1", ""), "white", "PW")) })
 
-
-    # Still TODO:
-      # (d) fix Cr naming issue in lists 9-16
 ```
 
 
@@ -98,29 +95,40 @@ ms <- d %>%
   group_by(trialType, subid) %>%
   summarise(acc = mean(acc, na.rm=TRUE)) %>%
   multi_boot_standard(col = "acc", na.rm = TRUE)
+
+# plot #1
 ggplot(ms, aes(x = trialType, y = mean, fill = trialType)) + 
   geom_bar(stat = "identity") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  ggtitle("Figure 1: Performance per trial type across lists") +
   geom_hline(yintercept = .5, lty = 3)
 
 
 #grouping by trial name (n = 8)
 ms <- d %>%   
-  group_by(trialName, subid) %>%
+  group_by(trialName,subid) %>%
   summarise(acc = mean(acc, na.rm=TRUE)) %>%
   multi_boot_standard(col = "acc", na.rm = TRUE)
+view(ms)
+# plot #1 (barplot)
 ggplot(ms, aes(x = trialName, y = mean, fill = trialName)) + 
   geom_bar(stat = "identity") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  ggtitle("Figure 2a: Performance by trial across lists") +
   geom_hline(yintercept = .5, lty = 3)
 
-
-
-
-#TODO: fix labeling issue with 'Cr' trials
-#TODO: use faceting to separate into groups by familiarization order 
-          # INCREASING = odd numbered lists
-          # DECREASING = even numbered lists
+# plot #2 (boxplot)
+ms <- d %>%   
+  group_by(trialName, listNum,subid) %>%
+  summarise(acc = mean(acc, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "acc", na.rm = TRUE)
+view(ms)
+ggplot(ms, aes(x = trialName, y = mean, fill = trialName)) + 
+  geom_boxplot() +
+  theme(legend.position = "none") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  ggtitle("Figure 2b: Performance per trial across lists (boxplot)") +
+  geom_hline(yintercept = .5, lty = 3)
 
 ```
 ```{r byFamOrder}
@@ -135,6 +143,7 @@ ms_increasing <- d %>%
 ggplot(ms_increasing, aes(x = trialName, y = mean, fill = trialName)) + 
   geom_bar(stat = "identity") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  ggtitle("Figure 3: Performance by trial (INCREASING fam order)") +
   geom_hline(yintercept = .5, lty = 3)
 
 # df with just DECREASING fam order (even-numbered lists)
@@ -148,5 +157,209 @@ ms_decreasing <- d %>%
 ggplot(ms_decreasing, aes(x = trialName, y = mean, fill = trialName)) +  
   geom_bar(stat = "identity") +
   geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  ggtitle("Figure 4: Performance by trial (DECREASING fam order)") +
   geom_hline(yintercept = .5, lty = 3)
 ```
+```{r dataByList}
+#aggregate performance grouping by list
+ms.byList <- d %>%   
+  group_by(listNum,trialType, add = FALSE) %>%
+  summarise(acc = mean(acc, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "acc", na.rm = TRUE)
+ggplot(ms.byList, aes(x = listNum, y = mean, fill = listNum)) + 
+  geom_bar(stat = "identity") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  ggtitle("Figure 5: Overall accuracy by list") +
+  geom_hline(yintercept = .5, lty = 3)
+
+
+#grouping by trial type 
+ms.typeByList <- d %>%   
+  select(subid,listNum,trialType,trialName,acc) %>% 
+  group_by(listNum,trialType,subid) %>% 
+  summarise(acc = mean(acc, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "acc", na.rm = TRUE) %>% 
+  ungroup()
+view(ms.typeByList)
+# plot #1 (doesn't make sense stacked, needed to be grouped/clustered)
+ggplot(ms.typeByList, aes(x = listNum, y = mean, fill = trialType)) + 
+  geom_bar(stat = "identity") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  ggtitle("Figure 6a: Accuracy by list by trial type (stacked)") +
+  geom_hline(yintercept = 1.5, lty = 3) 
+# plot#2
+ggplot(ms.typeByList, aes(x = listNum, y = mean, fill = trialType)) + 
+  geom_bar(stat = "identity") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  geom_hline(yintercept = .5, lty = 3) +
+  ggtitle("Figure 6b: Accuracy by list per trial type (boxplot)") +
+  facet_wrap(~trialType)
+
+```
+
+Trying to figure out what's going on with R3 performance (performance across lists is at chance):
+```{r investigatingR3}
+ms_R3 <- d %>% 
+  filter(trialName == "R3") %>% 
+  group_by(listNum, subid) %>%
+  summarise(acc = mean(acc, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "acc", na.rm = TRUE)
+
+ggplot(ms_R3, aes(x = listNum, y = mean, fill = listNum)) +  
+  geom_bar(stat = "identity") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  ggtitle("Figure 8a: Accuracy by list for Recap 3") +
+  geom_hline(yintercept = .5, lty = 3)
+```
+
+cf. performance for R2 by list: 
+```{r investigatingR2}
+ms_R2 <- d %>% 
+  filter(trialName == "R2") %>% 
+  group_by(listNum, subid) %>%
+  summarise(acc = mean(acc, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "acc", na.rm = TRUE)
+
+ggplot(ms_R2, aes(x = listNum, y = mean, fill = listNum)) +  
+  geom_bar(stat = "identity") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  ggtitle("Figure 8b: Accuracy by list for Recap 2") +
+  geom_hline(yintercept = .5, lty = 3)
+```
+
+cf. performance for R1 by list: 
+```{r investigatingR1}
+ms_R1 <- d %>% 
+  filter(trialName == "R1") %>% 
+  group_by(listNum, subid) %>%
+  summarise(acc = mean(acc, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "acc", na.rm = TRUE)
+
+ggplot(ms_R1, aes(x = listNum, y = mean, fill = listNum)) +  
+  geom_bar(stat = "identity") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  ggtitle("Figure 8c: Accuracy by list for Recap 1") +
+  geom_hline(yintercept = .5, lty = 3)
+```
+
+cf. performance for R4 by list: 
+```{r investigatingR4}
+ms_R4 <- d %>% 
+  filter(trialName == "R4") %>% 
+  group_by(listNum, subid) %>%
+  summarise(acc = mean(acc, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "acc", na.rm = TRUE)
+
+ggplot(ms_R4, aes(x = listNum, y = mean, fill = listNum)) +  
+  geom_bar(stat = "identity") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  ggtitle("Figure 8d: Accuracy by list for Recap 4") +
+  geom_hline(yintercept = .5, lty = 3)
+```
+
+cf. performance for R1 thru R4 (aggregated) by list: 
+```{r investigatingRecaps}
+ms_R1234 <- d %>% 
+  filter(trialName %in% c('R1','R2','R3','R4'))%>% 
+  group_by(listNum,subid) %>%
+  summarise(acc = mean(acc, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "acc", na.rm = TRUE)
+
+ggplot(ms_R1234, aes(x = listNum, y = mean, fill = listNum)) +  
+  geom_bar(stat = "identity") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  ggtitle("Figure 8e: Accuracy by list for Recaps 1-4") +
+  geom_hline(yintercept = .5, lty = 3)
+```
+
+
+cf. performance for G1 by list: 
+```{r investigatingG1}
+ms_G1 <- d %>% 
+  filter(trialName == "G1") %>% 
+  group_by(listNum, subid) %>%
+  summarise(acc = mean(acc, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "acc", na.rm = TRUE)
+
+ggplot(ms_G1, aes(x = listNum, y = mean, fill = listNum)) +  
+  geom_bar(stat = "identity") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  ggtitle("Figure 9a: Accuracy by list for Generalization 1") +
+  geom_hline(yintercept = .5, lty = 3)
+```
+
+cf. performance for G2 by list: 
+```{r investigatingG2}
+ms_G2 <- d %>% 
+  filter(trialName == "G2") %>% 
+  group_by(listNum, subid) %>%
+  summarise(acc = mean(acc, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "acc", na.rm = TRUE)
+
+ggplot(ms_G2, aes(x = listNum, y = mean, fill = listNum)) +  
+  geom_bar(stat = "identity") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  ggtitle("Figure 9b: Accuracy by list for Generalization 2") +
+  geom_hline(yintercept = .5, lty = 3)
+```
+
+cf. performance for G1+ G2 (aggregated) by list: 
+```{r investigatingGens}
+ms_G12 <- d %>% 
+  filter(trialName %in% c('G1','G2'))%>% 
+  group_by(listNum,subid) %>%
+  summarise(acc = mean(acc, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "acc", na.rm = TRUE)
+
+ggplot(ms_G12, aes(x = listNum, y = mean, fill = listNum)) +  
+  geom_bar(stat = "identity") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  ggtitle("Figure 9c: Accuracy by list for Generalizations 1+2") +
+  geom_hline(yintercept = .5, lty = 3)
+```
+
+
+cf. performance for Critical Trials (aggregated) by list: 
+```{r investigatingCrACrB}
+ms_CrAB <- d %>% 
+  filter(trialName %in% c('CrA','CrB'))%>% 
+  group_by(listNum,subid) %>%
+  summarise(acc = mean(acc, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "acc", na.rm = TRUE)
+
+ggplot(ms_CrAB, aes(x = listNum, y = mean, fill = listNum)) +  
+  geom_bar(stat = "identity") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  ggtitle("Figure 10a: Accuracy by list for Critical trials (CrA/CrB)") +
+  geom_hline(yintercept = .5, lty = 3)
+```
+cf. performance for CrA (2(Left)vs.4(Right)) Trials by list: 
+```{r investigatingCrA}
+ms_CrA <- d %>% 
+  filter(trialName == 'CrA')%>% 
+  group_by(listNum,subid) %>%
+  summarise(acc = mean(acc, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "acc", na.rm = TRUE)
+
+ggplot(ms_CrA, aes(x = listNum, y = mean, fill = listNum)) +  
+  geom_bar(stat = "identity") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  ggtitle("Figure 10b: Accuracy by list for Critical trial A (CrA)") +
+  geom_hline(yintercept = .5, lty = 3)
+```
+cf. performance for CrB (4(Left)vs.2(Right)) Trials by list: 
+```{r investigatingCrB}
+ms_CrB <- d %>% 
+  filter(trialName == 'CrB')%>% 
+  group_by(listNum,subid) %>%
+  summarise(acc = mean(acc, na.rm=TRUE)) %>%
+  multi_boot_standard(col = "acc", na.rm = TRUE)
+
+ggplot(ms_CrB, aes(x = listNum, y = mean, fill = listNum)) +  
+  geom_bar(stat = "identity") +
+  geom_linerange(aes(ymin = ci_lower, ymax = ci_upper)) + 
+  ggtitle("Figure 10c: Accuracy by list for Critical trials (CrB)") +
+  geom_hline(yintercept = .5, lty = 3)
+```
+
+
